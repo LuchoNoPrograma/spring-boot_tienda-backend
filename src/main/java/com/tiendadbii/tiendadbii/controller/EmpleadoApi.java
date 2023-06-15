@@ -26,7 +26,7 @@ public class EmpleadoApi {
   public ResponseEntity<?> listarPaginados(
           @RequestParam(required = false, defaultValue = "0") int page,
           @RequestParam(required = false, defaultValue = "10") int size,
-          @RequestParam(required = false, defaultValue = "idPersona") String sort,
+          @RequestParam(required = false, defaultValue = "idEmpleado") String sort,
           @RequestParam(required = false, defaultValue = "ASC") String order) {
     try {
       Sort.Direction direction = Sort.Direction.fromString(order);
