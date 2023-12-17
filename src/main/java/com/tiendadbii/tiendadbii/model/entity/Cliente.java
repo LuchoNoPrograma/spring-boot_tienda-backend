@@ -1,5 +1,6 @@
 package com.tiendadbii.tiendadbii.model.entity;
 
+import com.tiendadbii.tiendadbii.model.entity.parent.Persona;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,11 +13,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "cliente")
-public class Cliente extends AuditoriaRevision{
+public class Cliente extends Persona {
   @Id
-  private Integer ciCliente;
-  private String nombreCliente;
-  private String direccionCliente;
-  private String celularCliente;
-  private String emailCliente;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_cliente")
+  private Integer idCliente;
+
+  @Column(name = "email", length = 55)
+  private String email;
 }

@@ -1,5 +1,6 @@
 package com.tiendadbii.tiendadbii.model.entity;
 
+import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,18 +15,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "ocupa")
-public class Ocupa extends AuditoriaRevision{
+public class Ocupa extends AuditoriaRevision {
   @ManyToOne
-  @JoinColumn(name = "cargo_id_cargo")
+  @JoinColumn(name = "fk_id_cargo", foreignKey = @ForeignKey(name = "cargo_se_asigna_a_empleado"))
   private Cargo cargo;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "empleado_id_empleado")
+  @JoinColumn(name = "fk_id_empleado", foreignKey = @ForeignKey(name = "empleado_ocupa_cargo"))
   private Empleado empleado;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "codigo_ocupa")
   private Integer codigoOcupa;
+
+  @Column(name = "fecha_inicio", nullable = false)
   private LocalDate fechaInicio;
-  private LocalDate fechaFinal;
+
+  @Column(name = "fecha_fin")
+  private LocalDate fechaFin;
 }

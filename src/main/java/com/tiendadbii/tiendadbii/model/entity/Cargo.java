@@ -1,5 +1,6 @@
 package com.tiendadbii.tiendadbii.model.entity;
 
+import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,12 @@ import lombok.Setter;
 public class Cargo extends AuditoriaRevision {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_cargo")
   private Integer idCargo;
+
+  @Column(name = "nombre_cargo", length = 55, nullable = false)
   private String nombreCargo;
-  private String descripcionCargo;
+
+  @Column(name = "descripcion", columnDefinition = "TEXT")
+  private String descripcion;
 }
