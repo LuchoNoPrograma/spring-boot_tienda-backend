@@ -7,10 +7,10 @@ const BLUE_THEME: ThemeTypes = {
         'border-color': '#e5eaef'
     },
     colors: {
-        primary: '#1e4db7',
-        secondary: '#1a97f5',
+        primary: '#3f6fe8',
+        secondary: '#35d988',
         info: '#539BFF',
-        success: '#05b187',
+        success: '#22dc95',
         accent: '#FFAB91',
         warning: '#FFAE1F',
         error: '#FA896B',
@@ -106,8 +106,8 @@ const GREEN_THEME: ThemeTypes = {
         'border-color': '#e5eaef'
     },
     colors: {
-        primary: '#066a73',
-        secondary: '#00cec3',
+        primary: '#27c79c',
+        secondary: '#0eb9b0',
         info: '#539BFF',
         success: '#05b187',
         accent: '#FFAB91',

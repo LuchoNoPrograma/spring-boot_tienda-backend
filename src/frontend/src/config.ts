@@ -1,3 +1,5 @@
+import {GREEN_THEME} from "@/theme/LightTheme";
+
 export type ConfigProps = {
     Sidebar_drawer: any;
     Customizer_drawer: boolean;
@@ -14,8 +16,8 @@ const config: ConfigProps = {
     Customizer_drawer: false,
     mini_sidebar: false,
     setHorizontalLayout: false, // Horizontal layout
-    actTheme: 'ORANGE_THEME',
-    inputBg: 'ORANGE_THEME',
+    actTheme: 'BLUE_THEME',
+    inputBg: 'BLUE_THEME',
     boxed: true,
     setBorderCard: false
 };
