@@ -1,0 +1,28 @@
+/*
+Template Name: Admin Template
+Author: Niravjoshi / wrappixel.com
+File: scss
+*/
+
+ @import 'variable';
+// Import Bootstrap source files
+@import "../libs/bootstrap/scss/bootstrap.scss";  
+//This is for the icons
+@import 'icons/tabler-icons/tabler-icons.css'; 
+//This is the core files
+@import 'docs'; 
+
+//This is for the components (Required file)
+@import "components";
+
+//This is for the responsive (Required file)
+@import "responsive";
+
+//In This scss you can write your scss
+
+@import "custom";
+
+@import "landingpage/landingpage";
+
+//This is for the icons (Required file)
+@import "../scss/icons/simple-line-icons/css/simple-line-icons.css";
