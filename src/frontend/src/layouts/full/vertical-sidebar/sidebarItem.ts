@@ -1,11 +1,11 @@
 import {
-  MenuIcon,
+  AwardIcon,
+  BrandChromeIcon,
   CircleIcon,
   CircleOffIcon,
-  BrandChromeIcon,
+  MenuIcon,
   MoodSmileIcon,
-  StarIcon,
-  AwardIcon
+  StarIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
