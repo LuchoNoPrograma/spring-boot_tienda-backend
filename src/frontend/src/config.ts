@@ -1,5 +1,3 @@
-import {GREEN_THEME} from "@/theme/LightTheme";
-
 export type ConfigProps = {
     Sidebar_drawer: any;
     Customizer_drawer: boolean;
