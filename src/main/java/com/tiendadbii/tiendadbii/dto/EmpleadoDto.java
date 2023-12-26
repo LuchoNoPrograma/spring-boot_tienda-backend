@@ -1,10 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
-import com.tiendadbii.tiendadbii.model.Estado;
 import lombok.*;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -12,18 +9,9 @@ import java.util.List;
  */
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmpleadoDto implements Serializable {
-  private Estado estado;
-  private LocalDateTime fechaRegistro;
-  private String ci;
-  private String nombres;
-  private String apellidos;
-  private String direccion;
-  private String celular;
-  private String prefijoCelular;
+public class EmpleadoDto extends PersonaDto {
   private Integer idEmpleado;
   private String email;
   private List<HorarioDto> listaHorario; //<-- Relationship between Empleado and Horario
