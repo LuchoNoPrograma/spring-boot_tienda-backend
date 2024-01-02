@@ -5,10 +5,7 @@ import java.util.Optional;
 
 public interface GenericCrudService<T, K> {
   List<T> findAll();
-
-  T save(T entity);
-
-  Optional<T> findById(K id);
-
+  T createNew(T entity);
+  T update(T entity);
   void deleteById(K id);
 }

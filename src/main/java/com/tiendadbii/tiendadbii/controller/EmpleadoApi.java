@@ -60,7 +60,7 @@ public class EmpleadoApi {
   @PostMapping
   public ResponseEntity<?> createEmpleado(@RequestBody EmpleadoDto empleadoDto) {
     Empleado empleado = this.toEntity(empleadoDto);
-    return ResponseEntity.ok(empleadoService.createNewEmployee(empleado));
+    return ResponseEntity.ok(empleadoService.createNew(empleado));
   }
 
   @PutMapping
@@ -71,7 +71,7 @@ public class EmpleadoApi {
   @DeleteMapping("/{idEmpleado}")
   public ResponseEntity<?> deleteEmpleado(@PathVariable Integer idEmpleado) {
     Empleado empleado = empleadoRepository.findById(idEmpleado).orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
-    empleado.setEstado(Estado.INACTIVO);
+    empleado.setEstado(Estado.ELIMINADO);
     return ResponseEntity.ok().build();
   }
 

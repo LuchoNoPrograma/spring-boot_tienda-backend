@@ -20,22 +20,19 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
   }
 
   @Override
-  public Empleado save(Empleado entity) {
+  public Empleado createNew(Empleado entity) {
     return empleadoRepository.save(entity);
   }
 
   @Override
-  public Optional<Empleado> findById(Integer id) {
-    return empleadoRepository.findById(id);
+  public Empleado update(Empleado entity) {
+    return empleadoRepository.save(entity);
   }
+
 
   @Override
   public void deleteById(Integer id) {
     empleadoRepository.deleteById(id);
   }
 
-  @Override
-  public Empleado createNewEmployee(Empleado employee) {
-    return empleadoRepository.save(employee);
-  }
 }
