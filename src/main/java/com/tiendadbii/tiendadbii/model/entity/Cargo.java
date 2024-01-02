@@ -1,17 +1,18 @@
 package com.tiendadbii.tiendadbii.model.entity;
 
+import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString(callSuper = true)
 @Table(name = "cargo")
 public class Cargo extends AuditoriaRevision {
   @Id
@@ -24,4 +25,13 @@ public class Cargo extends AuditoriaRevision {
 
   @Column(name = "descripcion", columnDefinition = "TEXT")
   private String descripcion;
+
+  @Builder
+  public Cargo(Integer idCargo, String nombreCargo, String descripcion, LocalDateTime fechaRegistro, Estado estado) {
+    this.idCargo = idCargo;
+    this.nombreCargo = nombreCargo;
+    this.descripcion = descripcion;
+    this.setFechaRegistro(fechaRegistro);
+    this.setEstado(estado);
+  }
 }
