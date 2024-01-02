@@ -2,12 +2,13 @@ package com.tiendadbii.tiendadbii.model.entity.parent;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @MappedSuperclass
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Persona extends AuditoriaRevision{
   @Column(name = "ci", length = 30, nullable = false)
   private String ci;
@@ -24,6 +25,6 @@ public abstract class Persona extends AuditoriaRevision{
   @Column(name = "celular", length = 14, nullable = false)
   private String celular;
 
-  @Column(name = "prefijo_celular", length = 6, nullable = false)
+  @Column(name = "prefijo_celular", length = 6)
   private String prefijoCelular;
 }
