@@ -3,6 +3,7 @@ package com.tiendadbii.tiendadbii.model.service.impl;
 import com.tiendadbii.tiendadbii.model.entity.Empleado;
 import com.tiendadbii.tiendadbii.model.repository.EmpleadoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IEmpleadoService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
   @Override
   public void deleteById(Integer id) {
     empleadoRepository.deleteById(id);
+  }
+
+  @Override
+  public Empleado findById(Integer id) {
+    return empleadoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Empleado not found with given id: " + id));
   }
 
 }

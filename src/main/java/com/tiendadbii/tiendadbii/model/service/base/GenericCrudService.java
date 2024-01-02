@@ -8,4 +8,5 @@ public interface GenericCrudService<T, K> {
   T createNew(T entity);
   T update(T entity);
   void deleteById(K id);
+  T findById(K id);
 }

@@ -4,6 +4,7 @@ import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.repository.CargoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class CargoServiceImpl implements ICargoService {
   public Cargo createNew(Cargo entity) {
     if (entity.getIdCargo() == null || entity.getIdCargo() == 0) {
       entity.setEstado(Estado.ACTIVO);
+      //entity.setFechaRegistro is performed by AuditoryConfig
       return cargoRepository.save(entity);
     }
     throw new IllegalArgumentException("Id must be null or 0");
@@ -51,6 +53,11 @@ public class CargoServiceImpl implements ICargoService {
       , () -> {
         throw new IllegalArgumentException("Cargo not found with given id: " + id);
       });
+  }
+
+  @Override
+  public Cargo findById(Integer id) {
+    return cargoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cargo not found with given id: " + id));
   }
 
 }
