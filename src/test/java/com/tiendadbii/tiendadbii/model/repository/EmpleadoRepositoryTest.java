@@ -21,7 +21,7 @@ public class EmpleadoRepositoryTest extends ContainerEnvironment {
   @Test
   //Here's a simple test designed to verify non-null values.
   //It's worth noting that the database schema already contains configured validations for these columns.
-  public void givenEmployee_whenSave_thenEmployeHas_nombres_apellidos_ci_prefijoCelular_celular() {
+  public void givenEmployee_whenSave_thenReturnPersistedEmpleado() {
     //Given: Empleado before save, must have the following attributes:
     //nombres, apellidos, ci, prefijoCelular, celular
     Empleado empleado = new Empleado();
