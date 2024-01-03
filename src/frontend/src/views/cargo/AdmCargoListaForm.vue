@@ -10,6 +10,7 @@ import {fieldRequired} from "@/utils/helpers/vuelidate-rules";
 import {alertCreated, alertDeleted, alertError, alertUpdated} from "@/utils/helpers/sweetalert-dialog";
 import type {crudFormType} from "@/types/FormTypes";
 import Swal from "sweetalert2";
+import UiParentCard from "@/components/shared/UiParentCard.vue";
 
 const breadcrumbs = [{
   title: 'Cargos',
@@ -119,71 +120,73 @@ fetchListaCargo();
 <template>
   <div>
     <base-breadcrumb :breadcrumbs="breadcrumbs" title="Lista de cargos"></base-breadcrumb>
-    <v-data-table :headers="headers" :items="listaCargo">
-      <template v-slot:top>
-        <v-toolbar>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="600px">
-            <template v-slot:activator="{props}">
-              <v-btn color="success" v-bind="props" variant="elevated" @click="openDialogCreate">
-                Registrar
-                <file-plus-icon></file-plus-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-item class="bg-primary pb-2">
-                <dialog-toolbar @closeDialog="closeDialog">
-                  <template v-slot:title>{{ crudForm == 'create' ? 'Registrar nuevo cargo' : 'Editar cargo: '+cargo.nombreCargo }}</template>
-                  <template v-slot:subtitle>Rellene los datos en el siguiente formulario.</template>
-                </dialog-toolbar>
-              </v-card-item>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <input v-model="cargo.idCargo" type="hidden">
-                    <v-col cols="12" md="4" sm="12">
-                      <form-label>Nombre:</form-label>
-                      <v-text-field v-model="cargo.nombreCargo"
-                                    :error-messages="rules.nombreCargo.$errors.map(e => e.$message as string)"
-                                    counter="55" maxlength=55
-                                    persistent-counter
-                                    @blur="rules.nombreCargo.$touch()"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="8" sm="12">
-                      <form-label>Descripción:</form-label>
-                      <v-textarea v-model="cargo.descripcion"
-                                  :error-messages="rules.descripcion.$errors.map(e => e.$message as string)"
-                                  counter="300" maxlength="300"
-                                  persistent-counter rows="1"
-                                  @input="rules.descripcion.$touch()"></v-textarea>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions class="d-flex justify-end">
-                <v-btn append-icon="mdi-send" color="primary" variant="elevated" @click="submitForm()">
-                  Enviar
+    <v-card elevation="10">
+      <v-data-table :headers="headers" :items="listaCargo">
+        <template v-slot:top>
+          <v-toolbar>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="600px">
+              <template v-slot:activator="{props}">
+                <v-btn color="success" v-bind="props" variant="elevated" @click="openDialogCreate">
+                  Registrar
+                  <file-plus-icon></file-plus-icon>
                 </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-toolbar>
-      </template>
-      <template v-slot:item.idCargo="{item}">
-        <v-btn :icon="true" class="mr-2" color="primary" size="small" @click="openDialogUpdate(item)">
-          <edit-icon></edit-icon>
-          <v-tooltip activator="parent">Editar</v-tooltip>
-        </v-btn>
-        <v-btn :icon="true" color="error" size="small" @click="submitDeleteForm(item)">
-          <trash-icon></trash-icon>
-          <v-tooltip activator="parent">Eliminar</v-tooltip>
-        </v-btn>
-      </template>
-    </v-data-table>
+              </template>
+              <v-card>
+                <v-card-item class="bg-primary pb-2">
+                  <dialog-toolbar @closeDialog="closeDialog">
+                    <template v-slot:title>{{ crudForm == 'create' ? 'Registrar nuevo cargo' : 'Editar cargo: '+cargo.nombreCargo }}</template>
+                    <template v-slot:subtitle>Rellene los datos en el siguiente formulario.</template>
+                  </dialog-toolbar>
+                </v-card-item>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <input v-model="cargo.idCargo" type="hidden">
+                      <v-col cols="12" md="4" sm="12">
+                        <form-label>Nombre:</form-label>
+                        <v-text-field v-model="cargo.nombreCargo"
+                                      :error-messages="rules.nombreCargo.$errors.map(e => e.$message as string)"
+                                      counter="55" maxlength=55
+                                      persistent-counter
+                                      @blur="rules.nombreCargo.$touch()"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="8" sm="12">
+                        <form-label>Descripción:</form-label>
+                        <v-textarea v-model="cargo.descripcion"
+                                    :error-messages="rules.descripcion.$errors.map(e => e.$message as string)"
+                                    counter="300" maxlength="300"
+                                    persistent-counter rows="1"
+                                    @input="rules.descripcion.$touch()"></v-textarea>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+
+                <v-card-actions class="d-flex justify-end">
+                  <v-btn append-icon="mdi-send" color="primary" variant="elevated" @click="submitForm()">
+                    Enviar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.idCargo="{item}">
+          <v-btn :icon="true" class="mr-2" color="primary" size="small" @click="openDialogUpdate(item)">
+            <edit-icon></edit-icon>
+            <v-tooltip activator="parent">Editar</v-tooltip>
+          </v-btn>
+          <v-btn :icon="true" color="error" size="small" @click="submitDeleteForm(item)">
+            <trash-icon></trash-icon>
+            <v-tooltip activator="parent">Eliminar</v-tooltip>
+          </v-btn>
+        </template>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 
