@@ -2,6 +2,7 @@ import {createVuetify} from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import {es} from "vuetify/locale";
 // import { BLUE_THEME} from '@/theme/LightTheme';
 import {BLUE_THEME, GREEN_THEME, INDIGO_THEME, ORANGE_THEME, PURPLE_THEME, RED_THEME} from '@/theme/LightTheme';
 import {
@@ -14,6 +15,11 @@ import {
 } from '@/theme/DarkTheme';
 
 export default createVuetify({
+  locale: {
+    locale: 'es',
+    fallback: 'es',
+    messages: {es}
+  },
   components,
   directives,
 

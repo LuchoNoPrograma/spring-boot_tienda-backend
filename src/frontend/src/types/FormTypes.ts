@@ -1,0 +1,1 @@
+export type crudFormType = 'create' | 'update' | 'delete' | 'readonly'
