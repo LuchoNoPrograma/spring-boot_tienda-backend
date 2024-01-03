@@ -154,7 +154,7 @@ public class CargoApiTest extends ContainerEnvironment {
     //When DELETE request in /api/cargo/{idCargo}
     ResultActions response = mockMvc.perform(delete("/api/cargo/{idCargo}", cargoCreated.getIdCargo()));
 
-    //Then: find in DB an d verify if not deleted in DB and only change estado to Estado.ELIMINADO
+    //Then: find in DB and verify if not deleted in DB and only change estado to Estado.ELIMINADO
     Cargo cargoFound = cargoService.findById(cargoCreated.getIdCargo());
     Assert.isTrue(cargoFound.getEstado().equals(Estado.ELIMINADO), "estado should be updated with Estado.ELIMINADO");
     response.andExpect(status().is(204))
