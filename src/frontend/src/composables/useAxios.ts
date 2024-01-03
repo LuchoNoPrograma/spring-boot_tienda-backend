@@ -14,19 +14,19 @@ export const useAxios = () => {
   const status = ref();
 
   const execute = async<T>(url: string, config?: AxiosRequestConfig,
-                         onSuccess?: (data: T) => void, onRejected?: (data: any) => void) => {
+                         onSuccess?: (data: T, status?: number) => void, onRejected?: (errorCatch: any) => void) => {
     try {
       const response = await axiosServices(url, config);
       status.value = response.status;
       data.value = response.data;
       if (onSuccess) {
-        onSuccess(response.data);
+        onSuccess(response.data, response.status);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (errorCatch) {
+      console.log(errorCatch);
       error.value = true;
       if (onRejected) {
-        onRejected(e);
+        onRejected(error);
       }
     } finally {
       error.value = false;
