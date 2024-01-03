@@ -1,3 +1,7 @@
+type AuditoriaRevision = {
+  fechaRegistro?: Date | string
+}
+
 export type Persona = {
   ci?: string
   nombres?: string
@@ -7,7 +11,13 @@ export type Persona = {
   prefijoCelular?: string
 }
 
-export type Empleado = Persona & {
+export type Empleado = Persona & AuditoriaRevision & {
   email?: string,
   idEmpleado?: number
+}
+
+export type Cargo = AuditoriaRevision & {
+ idCargo?: number,
+ nombreCargo?: string,
+ descripcion?: string
 }
