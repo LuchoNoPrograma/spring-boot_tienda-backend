@@ -15,6 +15,11 @@ const MainRoutes = {
       name: 'Formulario de empleado',
       path: '/empleado/formulario-registro',
       component: () => import('@/views/empleado/AdmEmpleadoForm.vue')
+    },
+    {
+      name: 'Lista de cargos',
+      path: '/cargo/lista',
+      component: () => import('@/views/cargo/AdmCargoListaForm.vue')
     }
   ]
 };

@@ -32,6 +32,12 @@ const sidebarItem: menu[] = [
       to: '/'
   },
   { header: 'Others' },
+  { header: 'Administrar' },
+  {
+    title: 'Cargos',
+    icon: BrandChromeIcon,
+    to: '/cargo/lista'
+  },
   {
       title: 'Menu Level',
       icon: MenuIcon,
