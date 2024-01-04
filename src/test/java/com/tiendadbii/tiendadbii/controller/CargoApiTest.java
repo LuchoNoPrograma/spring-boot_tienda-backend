@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiendadbii.tiendadbii.TiendaDbiiApplication;
 import com.tiendadbii.tiendadbii.config.ContainerEnvironment;
 import com.tiendadbii.tiendadbii.dto.CargoDto;
-import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
 import lombok.extern.log4j.Log4j2;
@@ -49,7 +48,6 @@ public class CargoApiTest extends ContainerEnvironment {
   @Autowired
   private ObjectMapper objectMapper;
 
-  //DTO will never show the attribute estado
   @Test
   public void givenListaCargo_whenFindAllCargo_thenListaCargoDto() throws Exception {
     //Given: listaCargo created in DB and "delete" the last item
@@ -66,8 +64,7 @@ public class CargoApiTest extends ContainerEnvironment {
     //When: Perform to endpoint /api/cargo
     ResultActions response = mockMvc.perform(get("/api/cargo"));
 
-    //Then: Verify if return status is 200 OK, and return the list of DTO based on condition estado != ELIMINADO
-    //Expected to get the list without item.estado != ELIMINADO
+    //Then: Verify if return status is 200 OK, and return the list of DTO
     response.andExpect(status().is(200))
       .andDo(print())
       .andExpect(jsonPath("$.size()", CoreMatchers.is(listaCargoPersisted.size() - 1)));
@@ -154,9 +151,9 @@ public class CargoApiTest extends ContainerEnvironment {
     //When DELETE request in /api/cargo/{idCargo}
     ResultActions response = mockMvc.perform(delete("/api/cargo/{idCargo}", cargoCreated.getIdCargo()));
 
-    //Then: find in DB and verify if not deleted in DB and only change estado to Estado.ELIMINADO
+    //Then: read, compare and verify the response
     Cargo cargoFound = cargoService.findById(cargoCreated.getIdCargo());
-    Assert.isTrue(cargoFound.getEstado().equals(Estado.ELIMINADO), "estado should be updated with Estado.ELIMINADO");
+    Assert.isNull(cargoFound, "Cargo not deleted");
     response.andExpect(status().is(204))
       .andExpect(content().string(""))
       .andDo(print());

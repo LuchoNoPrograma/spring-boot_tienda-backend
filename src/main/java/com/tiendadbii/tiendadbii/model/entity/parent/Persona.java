@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 public abstract class Persona extends AuditoriaRevision{
   @Column(name = "ci", length = 30, nullable = false)
   private String ci;

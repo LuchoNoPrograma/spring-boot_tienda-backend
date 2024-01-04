@@ -1,6 +1,5 @@
 package com.tiendadbii.tiendadbii.dto;
 
-import com.tiendadbii.tiendadbii.model.Estado;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonaDto implements Serializable {
-  private Estado estado;
   private LocalDateTime fechaRegistro;
   private String ci;
   private String nombres;

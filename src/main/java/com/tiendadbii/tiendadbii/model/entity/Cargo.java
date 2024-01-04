@@ -1,6 +1,5 @@
 package com.tiendadbii.tiendadbii.model.entity;
 
-import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,11 +26,10 @@ public class Cargo extends AuditoriaRevision {
   private String descripcion;
 
   @Builder
-  public Cargo(Integer idCargo, String nombreCargo, String descripcion, LocalDateTime fechaRegistro, Estado estado) {
+  public Cargo(Integer idCargo, String nombreCargo, String descripcion, LocalDateTime fechaRegistro) {
     this.idCargo = idCargo;
     this.nombreCargo = nombreCargo;
     this.descripcion = descripcion;
     this.setFechaRegistro(fechaRegistro);
-    this.setEstado(estado);
   }
 }

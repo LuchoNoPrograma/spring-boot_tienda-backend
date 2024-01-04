@@ -2,7 +2,6 @@ package com.tiendadbii.tiendadbii.model.service;
 
 import com.tiendadbii.tiendadbii.TiendaDbiiApplication;
 import com.tiendadbii.tiendadbii.config.ContainerEnvironment;
-import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.repository.CargoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
@@ -17,7 +16,6 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Log4j2
@@ -30,7 +28,7 @@ public class CargoServiceImplTest extends ContainerEnvironment {
   @Autowired
   private ICargoService cargoService;
 
-  //Persisted Cargo must have id, estado = Estado.ACTIVO and fechaRegistro = LocalDateTime.now()
+  //Persisted Cargo must have id and fechaRegistro = LocalDateTime.now()
   @Test
   public void givenCargo_whenCreate_thenReturnPersistedCargo() {
     //Given: Cargo submitted by user input
@@ -39,10 +37,9 @@ public class CargoServiceImplTest extends ContainerEnvironment {
     //When: Cargo is created and inserted in DB
     Cargo persistedCargo = cargoService.createNew(cargo);
 
-    //Then: Return cargo inserted in DB with id, estado and fechaRegistro
+    //Then: Return cargo inserted in DB with id and fechaRegistro
     log.info("Logging persistedCargo: {}", persistedCargo);
     Assert.notNull(persistedCargo.getIdCargo(), "Returned id null");
-    Assert.notNull(persistedCargo.getEstado(), "Returned estado null");
     Assert.notNull(persistedCargo.getFechaRegistro(), "Returned fechaRegistro null");
   }
 
@@ -66,10 +63,9 @@ public class CargoServiceImplTest extends ContainerEnvironment {
 
   /**
    * Updated Cargo must have id, NEW is Cargo submitted and OLD is Cargo in DB
-   * NEW.estado = OLD.estado
    * NEW.fechaRegistro = OLD.fechaRegistro
-   * Changes to 'estado' and 'fechaRegistro' made through user input will always be overwritten by the values retrieved from the Cargo in the database
-  */
+   * Changes to 'fechaRegistro' made through user input will always be overwritten by the values retrieved from the Cargo in the database
+   */
   @Test
   public void givenCargo_whenUpdate_thenReturnUpdatedCargo() {
     //Given: Cargo submitted by user input
@@ -86,33 +82,30 @@ public class CargoServiceImplTest extends ContainerEnvironment {
       .nombreCargo("Administrador Updated")
       .descripcion("Test1 Updated")
       .fechaRegistro(LocalDateTime.of(2002, Month.FEBRUARY, 11, 6, 30))
-      .estado(Estado.ELIMINADO)
       .build();
 
-    //When: Cargo is updated in the database, even if the 'fechaRegistro' and 'estado' are changed in the submitted Cargo.
+    //When: Cargo is updated in the database, even if the 'fechaRegistro' are changed in the submitted Cargo.
     Cargo updatedCargo = cargoService.update(submittedCargo);
 
-    //Then: Verify if these attributes are updated except [estado, fechaRegistro]
+    //Then: Verify if these attributes are updated except [fechaRegistro]
     log.info("Logging updatedCargo(NEW): {}", updatedCargo);
     Assert.isTrue(updatedCargo.getNombreCargo().equals(submittedCargo.getNombreCargo()), "nombreCargo is not updated");
     Assert.isTrue(updatedCargo.getDescripcion().equals(submittedCargo.getDescripcion()), "descripcion is not updated");
 
     Assert.isTrue(updatedCargo.getFechaRegistro().equals(persistedCargo.getFechaRegistro()), "fechaRegistro should not be updated");
-    Assert.isTrue(updatedCargo.getEstado().equals(persistedCargo.getEstado()), "estado should not be updated");
   }
 
   @Test
-  public void givenCargo_whenDeleted_thenUpdateWithEstadoEliminado() {
+  public void givenCargo_whenDeleted_thenDeleted() {
     //Given: Cargo submitted by user input
     Cargo cargo = Cargo.builder().nombreCargo("Administrador").descripcion("Test1").build();
     Integer idPersisted = cargoService.createNew(cargo).getIdCargo();
 
-    //When: Cargo is "deleted" but not actually deleted in the database, only updated with estado=Estado.ELIMINADO
+    //When: Cargo is deleted
     cargoService.deleteById(idPersisted);
 
-    //Then: Verify if the Cargo still exists in DB and if it was updated with estado=Estado.ELIMINADO
-    Cargo foundCargo = cargoRepository.findById(idPersisted).orElseThrow(() -> new IllegalArgumentException("Cargo not found with id: " + idPersisted));
-    log.info("Logging deletedCargo: {}", foundCargo);
-    Assert.isTrue(foundCargo.getEstado().equals(Estado.ELIMINADO), "estado should be updated with Estado.ELIMINADO");
+    //Then verify if it whas deleted correctly in the DB
+    Cargo foundCargo = cargoService.findById(idPersisted);
+    Assert.isNull(foundCargo, "Cargo not deleted");
   }
 }

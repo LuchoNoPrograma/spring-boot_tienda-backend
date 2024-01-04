@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -29,8 +30,19 @@ public class Horario extends AuditoriaRevision {
   private String dia;
 
   @Column(name = "hora_ingreso", nullable = false)
-  private LocalDateTime horaIngreso;
+  private LocalTime horaIngreso;
 
   @Column(name = "hora_salida", nullable = false)
-  private LocalDateTime horaSalida;
+  private LocalTime horaSalida;
+
+  @Override
+  public String toString() {
+    return "Horario{" +
+      "empleado=" + empleado.getIdEmpleado() +
+      ", idHorario=" + idHorario +
+      ", dia='" + dia + '\'' +
+      ", horaIngreso=" + horaIngreso +
+      ", horaSalida=" + horaSalida +
+      "} " + super.toString();
+  }
 }

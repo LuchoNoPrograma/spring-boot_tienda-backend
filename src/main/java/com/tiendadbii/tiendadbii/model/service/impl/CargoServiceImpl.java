@@ -1,6 +1,5 @@
 package com.tiendadbii.tiendadbii.model.service.impl;
 
-import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.repository.CargoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
@@ -24,7 +23,6 @@ public class CargoServiceImpl implements ICargoService {
   @Override
   public Cargo createNew(Cargo entity) {
     if (entity.getIdCargo() == null || entity.getIdCargo() == 0) {
-      entity.setEstado(Estado.ACTIVO);
       //entity.setFechaRegistro is performed by AuditoryConfig
       return cargoRepository.save(entity);
     }
@@ -37,7 +35,6 @@ public class CargoServiceImpl implements ICargoService {
 
     cargoRepository.findById(entity.getIdCargo()).ifPresent(old -> {
       entity.setFechaRegistro(old.getFechaRegistro());
-      entity.setEstado(old.getEstado());
     });
 
     return cargoRepository.save(entity);
@@ -45,19 +42,12 @@ public class CargoServiceImpl implements ICargoService {
 
   @Override
   public void deleteById(Integer id) {
-    cargoRepository.findById(id).ifPresentOrElse(
-      cargo -> {
-        cargo.setEstado(Estado.ELIMINADO);
-        cargoRepository.save(cargo);
-      }
-      , () -> {
-        throw new IllegalArgumentException("Cargo not found with given id: " + id);
-      });
+    cargoRepository.deleteById(id);
   }
 
   @Override
   public Cargo findById(Integer id) {
-    return cargoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cargo not found with given id: " + id));
+    return cargoRepository.findById(id).orElse(null);
   }
 
 }

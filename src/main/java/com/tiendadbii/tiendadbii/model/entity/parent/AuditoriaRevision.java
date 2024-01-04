@@ -1,7 +1,8 @@
 package com.tiendadbii.tiendadbii.model.entity.parent;
 
-import com.tiendadbii.tiendadbii.model.Estado;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,13 +17,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @ToString
 public abstract class AuditoriaRevision {
-  //Anotacion que convierte Enum en STRING
-  @Enumerated(EnumType.STRING)
-  @Column(name = "_estado", length = 55)
-  private Estado estado;
-
-
-  @Column(name = "_registro")
+  @Column(name = "_registro", updatable = false)
   @CreatedDate
   private LocalDateTime fechaRegistro;
 }

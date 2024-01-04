@@ -1,9 +1,7 @@
 package com.tiendadbii.tiendadbii.controller;
 
 import com.tiendadbii.tiendadbii.dto.CargoDto;
-import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
-import com.tiendadbii.tiendadbii.model.repository.CargoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,16 +24,15 @@ public class CargoApi {
   private final ICargoService cargoService;
   private final ModelMapper modelMapper;
 
-  @Operation(summary = "List all registered Cargo", description = "The search is performed in the database with restriction= estado != ELIMINADO")
+  @Operation(summary = "List all registered Cargo", description = "The search is performed in the database without filter")
   @GetMapping
   public ResponseEntity<List<CargoDto>> findAll() {
-    List<Cargo> filteredList = cargoService.findAll().stream().filter(cargo -> cargo.getEstado() != Estado.ELIMINADO).toList();
-    return ResponseEntity.ok(filteredList.stream().map(this::toDto).toList());
+    return ResponseEntity.ok(cargoService.findAll().stream().map(this::toDto).toList());
   }
 
   @Operation(summary = "Find Cargo with given ID", description = "Given an idCargo, it will return Cargo from DB")
   @GetMapping("/{idCargo}")
-  public ResponseEntity<CargoDto> findById(@PathVariable Integer idCargo){
+  public ResponseEntity<CargoDto> findById(@PathVariable Integer idCargo) {
     return ResponseEntity.ok(this.toDto(cargoService.findById(idCargo)));
   }
 
