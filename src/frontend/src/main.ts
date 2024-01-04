@@ -1,4 +1,4 @@
-import {createApp} from 'vue';
+import {createApp, inject} from 'vue';
 import {createPinia} from 'pinia';
 import App from './App.vue';
 import {router} from './router';
@@ -65,4 +65,7 @@ const sweetAlertOptions = {
   confirmButtonColor: '#3f6fe8',
   cancelButtonColor: '#FA896B'
 }
+
 app.use(VueSweetalert2, sweetAlertOptions)
+
+export default app;

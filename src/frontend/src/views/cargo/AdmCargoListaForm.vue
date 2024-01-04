@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
 import type {Cargo} from "@/types/entity";
-import {computed, ref} from "vue";
+import {computed, inject, ref} from "vue";
 import {useAxios} from "@/composables/useAxios";
 import FormLabel from "@/components/shared/FormLabel.vue";
 import DialogToolbar from "@/components/shared/DialogToolbar.vue";
@@ -9,9 +9,9 @@ import useVuelidate from "@vuelidate/core";
 import {fieldRequired} from "@/utils/helpers/vuelidate-rules";
 import {alertCreated, alertDeleted, alertError, alertUpdated} from "@/utils/helpers/sweetalert-dialog";
 import type {crudFormType} from "@/types/FormTypes";
-import Swal from "sweetalert2";
-import UiParentCard from "@/components/shared/UiParentCard.vue";
 
+
+const Swal: any = inject('$swal')
 const breadcrumbs = [{
   title: 'Cargos',
   disabled: true,
@@ -103,7 +103,7 @@ const submitDeleteForm = async (cargo: Cargo) => {
         alertError(errorCatch);
       });
     }
-  }).then(async (result) => {
+  }).then(async (result: { isConfirmed: any; }) => {
     if (result.isConfirmed) {
       return Swal.fire({
         icon: 'success',
@@ -136,7 +136,9 @@ fetchListaCargo();
               <v-card>
                 <v-card-item class="bg-primary pb-2">
                   <dialog-toolbar @closeDialog="closeDialog">
-                    <template v-slot:title>{{ crudForm == 'create' ? 'Registrar nuevo cargo' : 'Editar cargo: '+cargo.nombreCargo }}</template>
+                    <template v-slot:title>
+                      {{ crudForm == 'create' ? 'Registrar nuevo cargo' : 'Editar cargo: ' + cargo.nombreCargo }}
+                    </template>
                     <template v-slot:subtitle>Rellene los datos en el siguiente formulario.</template>
                   </dialog-toolbar>
                 </v-card-item>
