@@ -7,8 +7,8 @@ import com.tiendadbii.tiendadbii.model.repository.EmpleadoRepository;
 import com.tiendadbii.tiendadbii.model.repository.HorarioRepository;
 import com.tiendadbii.tiendadbii.model.repository.OcupaRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IEmpleadoService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,12 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
   @Override
   public List<Empleado> findAll() {
-    return empleadoRepository.findAll(Sort.by("idEmpleado").descending());
+    return empleadoRepository.findAll(Sort.by("nombres", "apellidos", "ci").descending());
+  }
+
+  @Override
+  public List<Empleado> findAll(Pageable pageable){
+    return empleadoRepository.findAll(pageable).get().toList();
   }
 
   @Override

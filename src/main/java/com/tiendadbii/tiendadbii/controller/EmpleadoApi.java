@@ -1,18 +1,17 @@
 package com.tiendadbii.tiendadbii.controller;
 
 import com.tiendadbii.tiendadbii.dto.EmpleadoDto;
-import com.tiendadbii.tiendadbii.model.Estado;
 import com.tiendadbii.tiendadbii.model.entity.Empleado;
 import com.tiendadbii.tiendadbii.model.repository.EmpleadoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IEmpleadoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,24 +21,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin({"*"})
 @RequestMapping("/api/empleado")
-@Tag(name = "Empleado", description = "Con esta API, puedes realizar operaciones como crear, leer, actualizar y eliminar registros de empleado")
+@Tag(name = "Empleado", description = "With this API, you can perform operations such as creating, reading, updating, and deleting Empleado records.")
 public class EmpleadoApi {
-  private final EmpleadoRepository empleadoRepository;
   private final ModelMapper modelMapper;
   private final IEmpleadoService empleadoService;
 
-  @Operation(summary = "Listar todos los empleados registrados", description = "La busqueda se realiza en la base de datos sin ninguna restricción")
+  @Operation(summary = "List all registered Empleado", description = "The search is performed in the database without any restrictions.")
   /*@ApiResponses(value = {
     @ApiResponse(responseCode = "200", description = "Búsqueda exitosa", content = @Content(array = @ArraySchema(schema = @Schema(implementation = EmpleadoDto.class)))),
   })*/
   @GetMapping
-  public ResponseEntity<List<EmpleadoDto>> getAllEmpleados() {
-    List<EmpleadoDto> listaEmpleadoDto = empleadoRepository.findAll(Sort.by("idEmpleado").descending()).stream().map(this::toDto).toList();
-    return ResponseEntity.ok().body(listaEmpleadoDto);
+  public ResponseEntity<List<EmpleadoDto>> findAll() {
+    return ResponseEntity.ok().body(empleadoService.findAll().stream().map(this::toDto).toList());
   }
 
+  @Operation(summary = "List all registered Empleado with pageable", description = "The search is performed in the database without any restrictions. based on 4 params, page, size, sort, order")
   @GetMapping("/pageable")
-  public ResponseEntity<List<EmpleadoDto>> listarPaginados(
+  public ResponseEntity<List<EmpleadoDto>> findAllPageable(
     @RequestParam(required = false, defaultValue = "0") int page,
     @RequestParam(required = false, defaultValue = "10") int size,
     @RequestParam(required = false, defaultValue = "idEmpleado") String sort,
@@ -48,31 +46,35 @@ public class EmpleadoApi {
     Sort.Direction direction = Sort.Direction.fromString(order);
     Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
 
-    return ResponseEntity.ok().body(empleadoRepository.findAll(pageable).get().toList().stream().map(this::toDto).toList());
+    return ResponseEntity.ok().body(empleadoService.findAll(pageable).stream().map(this::toDto).toList());
   }
 
   @GetMapping("/{idEmpleado}")
-  public ResponseEntity<EmpleadoDto> getEmpleadoById(@PathVariable Integer idEmpleado) {
-    return ResponseEntity.ok().body(toDto(empleadoRepository.findById(idEmpleado).orElseThrow(() -> new EntityNotFoundException("Empleado no encontrado con el id: " + idEmpleado))));
+  public ResponseEntity<EmpleadoDto> findById(@PathVariable Integer idEmpleado) {
+    return ResponseEntity.ok().body(this.toDto(empleadoService.findById(idEmpleado)));
   }
 
-  @Operation(summary = "Registrar un nuevo empleado", description = "Este registro requiere de cargos, que se envian mediante una entidad intermedia llamado Ocupa")
+  @Operation(summary = "Create new Empleado", description = "To create new Empleado, must have all fields, included a List of Ocupa and a List of Horario")
   @PostMapping
-  public ResponseEntity<?> createEmpleado(@RequestBody EmpleadoDto empleadoDto) {
-    Empleado empleado = this.toEntity(empleadoDto);
-    return ResponseEntity.ok(empleadoService.createNew(empleado));
+  public ResponseEntity<EmpleadoDto> createEmpleado(@RequestBody EmpleadoDto dto) {
+    EmpleadoDto empleadoDto = this.toDto(empleadoService.createNew(this.toEntity(dto)));
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .header("Location", "/api/empleado/" + empleadoDto.getIdEmpleado())
+      .body(empleadoDto);
   }
 
+  @Operation(summary = "Update Empleado", description = "To update Empleado, must have all fields, included a List of Ocupa and a List of Horario, old listaHorario and old listaOcupa will be overrided and deleted")
   @PutMapping
-  public ResponseEntity<?> updateEmpleado(@RequestBody Empleado empleado) {
-    return ResponseEntity.ok().body(empleadoRepository.save(empleado));
+  public ResponseEntity<EmpleadoDto> updateEmpleado(@RequestBody Empleado empleado) {
+    return ResponseEntity.ok(this.toDto(empleadoService.update(empleado)));
   }
 
+  @Operation(summary = "Delete Empleado", description = "Will delete all Empleado data included listaOcupa and listaHorario")
   @DeleteMapping("/{idEmpleado}")
   public ResponseEntity<?> deleteEmpleado(@PathVariable Integer idEmpleado) {
-    Empleado empleado = empleadoRepository.findById(idEmpleado).orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
-    empleado.setEstado(Estado.ELIMINADO);
-    return ResponseEntity.ok().build();
+    empleadoService.deleteById(idEmpleado);
+    return ResponseEntity.noContent().build();
   }
 
   private Empleado toEntity(EmpleadoDto dto) {
