@@ -15,10 +15,12 @@ import java.util.List;
 @ToString(callSuper = true)
 @Table(name = "empleado")
 public class Empleado extends Persona {
-  @OneToMany(mappedBy = "empleado", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+  @ToString.Exclude
   private List<Horario> listaHorario;
 
-  @OneToMany(mappedBy = "empleado", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+  @ToString.Exclude
   private List<Ocupa> listaOcupa;
 
   @Id
