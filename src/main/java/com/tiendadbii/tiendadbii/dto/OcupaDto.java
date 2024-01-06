@@ -1,9 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -13,6 +11,8 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class OcupaDto implements Serializable {
   String nombreCargo;

@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonaDto implements Serializable {
@@ -22,6 +21,7 @@ public class PersonaDto implements Serializable {
   private String celular;
   private String prefijoCelular;
   @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
   private String nombreCompleto;
 
   public String getNombreCompleto() {

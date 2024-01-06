@@ -27,7 +27,7 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
   }
 
   @Override
-  public List<Empleado> findAll(Pageable pageable){
+  public List<Empleado> findAll(Pageable pageable) {
     return empleadoRepository.findAll(pageable).get().toList();
   }
 
@@ -64,7 +64,13 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
   @Override
   public Empleado findById(Integer id) {
-    return empleadoRepository.findById(id).orElse(null);
+    Empleado empleado = empleadoRepository.findById(id).orElse(null);
+    if (empleado != null) {
+      empleado.setListaHorario(horarioRepository.findAllByEmpleadoIdEmpleado(empleado.getIdEmpleado()));
+      empleado.setListaOcupa(ocupaRepository.findAllByEmpleadoIdEmpleado(empleado.getIdEmpleado()));
+    }
+
+    return empleado;
   }
 
 }

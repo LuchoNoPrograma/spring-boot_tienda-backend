@@ -1,8 +1,11 @@
 package com.tiendadbii.tiendadbii.controller;
 
 import com.tiendadbii.tiendadbii.dto.EmpleadoDto;
+import com.tiendadbii.tiendadbii.dto.HorarioDto;
+import com.tiendadbii.tiendadbii.dto.OcupaDto;
 import com.tiendadbii.tiendadbii.model.entity.Empleado;
-import com.tiendadbii.tiendadbii.model.repository.EmpleadoRepository;
+import com.tiendadbii.tiendadbii.model.entity.Horario;
+import com.tiendadbii.tiendadbii.model.entity.Ocupa;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IEmpleadoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,7 +60,11 @@ public class EmpleadoApi {
   @Operation(summary = "Create new Empleado", description = "To create new Empleado, must have all fields, included a List of Ocupa and a List of Horario")
   @PostMapping
   public ResponseEntity<EmpleadoDto> createEmpleado(@RequestBody EmpleadoDto dto) {
-    EmpleadoDto empleadoDto = this.toDto(empleadoService.createNew(this.toEntity(dto)));
+    Empleado empleado = this.toEntity(dto);
+    empleado.getListaHorario().forEach(horario -> horario.setEmpleado(empleado));
+    empleado.getListaOcupa().forEach(ocupa -> ocupa.setEmpleado(empleado));
+
+    EmpleadoDto empleadoDto = this.toDto(empleadoService.createNew(empleado));
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .header("Location", "/api/empleado/" + empleadoDto.getIdEmpleado())
@@ -78,10 +85,25 @@ public class EmpleadoApi {
   }
 
   private Empleado toEntity(EmpleadoDto dto) {
-    return modelMapper.map(dto, Empleado.class);
+    Empleado empleado = modelMapper.map(dto, Empleado.class);
+    if (dto.getListaHorario() != null) {
+      empleado.setListaHorario(dto.getListaHorario().stream().map(horario -> modelMapper.map(horario, Horario.class)).toList());
+    }
+    if (dto.getListaOcupa() != null) {
+      empleado.setListaOcupa(dto.getListaOcupa().stream().map(ocupa -> modelMapper.map(ocupa, Ocupa.class)).toList());
+    }
+
+    return empleado;
   }
 
   private EmpleadoDto toDto(Empleado entity) {
-    return modelMapper.map(entity, EmpleadoDto.class);
+    EmpleadoDto empleadoDto = modelMapper.map(entity, EmpleadoDto.class);
+    if (entity.getListaHorario() != null) {
+      empleadoDto.setListaHorario(entity.getListaHorario().stream().map(horario -> modelMapper.map(horario, HorarioDto.class)).toList());
+    }
+    if (entity.getListaOcupa() != null) {
+      empleadoDto.setListaOcupa(entity.getListaOcupa().stream().map(ocupa -> modelMapper.map(ocupa, OcupaDto.class)).toList());
+    }
+    return empleadoDto;
   }
 }
