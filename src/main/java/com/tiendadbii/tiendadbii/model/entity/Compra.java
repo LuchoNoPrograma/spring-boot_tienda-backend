@@ -2,10 +2,7 @@ package com.tiendadbii.tiendadbii.model.entity;
 
 import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "compra")
 public class Compra extends AuditoriaRevision {
   @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)
@@ -22,7 +20,7 @@ public class Compra extends AuditoriaRevision {
 
   //por defecto el fetch es EAGER en @ManyToOne
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "fk_id_proveedor", foreignKey = @ForeignKey(name = "compra_suministrado_por_proveedor"))
+  @JoinColumn(name = "fk_id_proveedor", foreignKey = @ForeignKey(name = "compra_suministrado_por_proveedor"), nullable = false)
   private Proveedor proveedor;
 
   @Id

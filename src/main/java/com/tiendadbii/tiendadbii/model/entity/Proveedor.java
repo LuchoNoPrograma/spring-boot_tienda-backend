@@ -2,11 +2,9 @@ package com.tiendadbii.tiendadbii.model.entity;
 
 import com.tiendadbii.tiendadbii.model.entity.parent.Persona;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -18,7 +16,7 @@ import java.util.List;
 @Table(name = "proveedor")
 public class Proveedor extends Persona {
   //Por defecto el fetch es LAZY en @OneToMany
-  @OneToMany(mappedBy = "proveedor", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
   private List<Compra> listaCompra;
 
   @Id
@@ -28,4 +26,13 @@ public class Proveedor extends Persona {
 
   @Column(name = "email", length = 55)
   private String email;
+
+  @Builder
+  public Proveedor(String ci, String nombres, String apellidos, String direccion, String celular, String prefijoCelular, List<Compra> listaCompra, Integer idProveedor, String email, LocalDateTime fechaRegistro) {
+    super(ci, nombres, apellidos, direccion, celular, prefijoCelular);
+    this.listaCompra = listaCompra;
+    this.idProveedor = idProveedor;
+    this.email = email;
+    setFechaRegistro(fechaRegistro);
+  }
 }

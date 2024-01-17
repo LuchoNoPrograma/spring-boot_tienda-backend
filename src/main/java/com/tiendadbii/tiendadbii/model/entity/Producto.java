@@ -2,10 +2,7 @@ package com.tiendadbii.tiendadbii.model.entity;
 
 import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,11 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "producto")
+@Builder
 public class Producto extends AuditoriaRevision {
-  @OneToMany(mappedBy = "producto", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "producto", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH})
   private List<DetalleCompra> listaDetalleCompra;
 
-  @OneToMany(mappedBy = "producto", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "producto", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH})
   private List<DetalleVenta> listaDetalleVenta;
 
   @Id
@@ -44,4 +42,7 @@ public class Producto extends AuditoriaRevision {
 
   @Column(name = "stock", nullable = false)
   private Integer stock;
+
+  @Column(name = "ruta_archivo")
+  private String rutaArchivo;
 }
