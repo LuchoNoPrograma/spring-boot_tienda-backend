@@ -2,11 +2,11 @@ package com.tiendadbii.tiendadbii.model.service.impl;
 
 import com.tiendadbii.tiendadbii.model.entity.Compra;
 import com.tiendadbii.tiendadbii.model.entity.DetalleCompra;
-import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.repository.CompraRepository;
 import com.tiendadbii.tiendadbii.model.repository.ProductoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICompraService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +24,18 @@ public class CompraServiceImpl implements ICompraService {
     return compraRepository.findAll(Sort.by("fechaCompra").descending());
   }
 
+  @Override
+  public List<Compra> findAll(Pageable pageable) {
+    return compraRepository.findAll(pageable).getContent();
+  }
+
   @Transactional
   @Override
   public Compra createNew(Compra entity) {
     /*compra.setTotalCompra((float) compra.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDetalle).sum());
     compra.setTotalDescCompra((float) compra.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDescDetalle).sum());*/
+    if(entity.getProveedor() == null) throw new IllegalArgumentException("El proveedor no puede ser nulo");
+
     entity.setTotalCompra((float) entity.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDetalle).sum());
     entity.setTotalDescCompra((float) entity.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDescDetalle).sum());
     entity.getListaDetalleCompra().forEach(d -> {
