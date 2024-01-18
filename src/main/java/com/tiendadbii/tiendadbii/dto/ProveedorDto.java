@@ -1,9 +1,9 @@
 package com.tiendadbii.tiendadbii.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Value;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,17 +11,13 @@ import java.util.List;
 /**
  * DTO for {@link com.tiendadbii.tiendadbii.model.entity.Proveedor}
  */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProveedorDto implements Serializable {
-  String ci;
-  String nombres;
-  String apellidos;
-  String direccion;
-  String celular;
-  String prefijoCelular;
+public class ProveedorDto extends PersonaDto implements Serializable {
   List<CompraDto> listaCompra;
+
   Integer idProveedor;
   String email;
 }

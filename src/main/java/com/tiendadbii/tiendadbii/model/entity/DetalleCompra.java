@@ -2,10 +2,7 @@ package com.tiendadbii.tiendadbii.model.entity;
 
 import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,10 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "detalle_compra")
+@Builder
 public class DetalleCompra extends AuditoriaRevision {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "fk_codigo_producto", foreignKey = @ForeignKey(name = "detalle_compra_tiene_producto"))
-  private Producto producto;
+  private Producto producto ;
 
 
   @ManyToOne(fetch = FetchType.LAZY)
