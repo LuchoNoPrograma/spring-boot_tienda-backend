@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link DetalleCompra}
+ * DTO for {@link com.tiendadbii.tiendadbii.model.entity.DetalleCompra}
  */
 @Data
 @AllArgsConstructor

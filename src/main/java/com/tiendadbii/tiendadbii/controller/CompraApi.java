@@ -7,7 +7,7 @@ import com.tiendadbii.tiendadbii.model.entity.Compra;
 import com.tiendadbii.tiendadbii.model.entity.DetalleCompra;
 import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.entity.Proveedor;
-import com.tiendadbii.tiendadbii.model.service.impl.ProveedorServiceImpl;
+import com.tiendadbii.tiendadbii.model.repository.DetalleCompraRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICompraService;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IProveedorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +35,7 @@ public class CompraApi {
   private final ICompraService compraService;
   private final ModelMapper modelMapper;
   private final IProveedorService proveedorService;
+  private final DetalleCompraRepository detalleCompraRepository;
 
   @Operation(summary = "Find Compra with given ID", description = "Given an idCompra, it will return Compra from DB")
   @GetMapping("/{idCompra}")
@@ -66,8 +67,6 @@ public class CompraApi {
     })
   @PostMapping("/proveedor/{idProveedor}")
   public ResponseEntity<?> createCompra(@RequestBody CompraDto dto, @PathVariable Integer idProveedor) {
-    Proveedor proveedor = proveedorService.findById(idProveedor);
-
     if (dto.getListaDetalleCompra() == null)
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Compra must have a list of DetalleCompra");
     for (DetalleCompraDto detalleCompraDto : dto.getListaDetalleCompra()) {
@@ -77,14 +76,20 @@ public class CompraApi {
     }
 
     Compra compra = this.toEntity(dto);
-    compra.setProveedor(proveedor);
 
-    CompraDto compraDto = this.toDto(compraService.createNew(compra));
+
+    Compra compraPersisted = compraService.createNew(compra, idProveedor);
+    compraPersisted.setListaDetalleCompra(detalleCompraRepository.findAllByCompra_IdCompra(compraPersisted.getIdCompra()));
+
+    CompraDto compraDto = this.toDto(compraPersisted);
+    compraDto.setProveedor(null);
+
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .header("Location", "/api/compra/" + compraDto.getIdCompra())
       .body(compraDto);
   }
+
 
   private Compra toEntity(CompraDto dto) {
     Compra compra = modelMapper.map(dto, Compra.class);
@@ -111,6 +116,7 @@ public class CompraApi {
     if (entity.getListaDetalleCompra() != null) {
       List<DetalleCompraDto> listaDetalleCompraDto = entity.getListaDetalleCompra().stream().map(detalleCompra ->
         modelMapper.map(detalleCompra, DetalleCompraDto.class)).toList();
+
       compraDto.setListaDetalleCompra(listaDetalleCompraDto);
     }
 

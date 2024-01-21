@@ -63,7 +63,7 @@ public class CompraServiceImplTest extends ContainerEnvironment {
       .build();
 
     //When create a Compra, and if the Producto isn't registered in DB, automatically will create Producto in DetalleCompra
-    Compra createdCompra = compraService.createNew(compra);
+    Compra createdCompra = compraService.createNew(compra, proveedor.getIdProveedor());
 
     //Then Verify the output, Producto and total amount, stock
     Assert.notNull(createdCompra.getIdCompra());
@@ -130,7 +130,7 @@ public class CompraServiceImplTest extends ContainerEnvironment {
 
     //When create a Compra, and if the Producto is registered in DB,
     // will not create Producto in DetalleCompra, just only update the stock of Producto
-    Compra compraCreated = compraService.createNew(compra);
+    Compra compraCreated = compraService.createNew(compra, proveedor.getIdProveedor());
 
     //Then Verify the output, Producto and total amount, stock. Stock must be updated based on the amount of cantidad in DetalleCompra
     //Verify if the Vino stock is the same before and after created

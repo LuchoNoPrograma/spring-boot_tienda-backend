@@ -2,8 +2,11 @@ package com.tiendadbii.tiendadbii.model.service.impl;
 
 import com.tiendadbii.tiendadbii.model.entity.Compra;
 import com.tiendadbii.tiendadbii.model.entity.DetalleCompra;
+import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.repository.CompraRepository;
+import com.tiendadbii.tiendadbii.model.repository.DetalleCompraRepository;
 import com.tiendadbii.tiendadbii.model.repository.ProductoRepository;
+import com.tiendadbii.tiendadbii.model.repository.ProveedorRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICompraService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +21,17 @@ import java.util.List;
 public class CompraServiceImpl implements ICompraService {
   private final CompraRepository compraRepository;
   private final ProductoRepository productoRepository;
+  private final ProveedorRepository proveedorRepository;
+  private final DetalleCompraRepository detalleCompraRepository;
 
   @Override
   public List<Compra> findAll() {
     return compraRepository.findAll(Sort.by("fechaCompra").descending());
+  }
+
+  @Override
+  public Compra createNew(Compra entity) {
+    return null;
   }
 
   @Override
@@ -31,24 +41,48 @@ public class CompraServiceImpl implements ICompraService {
 
   @Transactional
   @Override
-  public Compra createNew(Compra entity) {
+  public Compra createNew(Compra entity, Integer idProveedor) {
     /*compra.setTotalCompra((float) compra.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDetalle).sum());
     compra.setTotalDescCompra((float) compra.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDescDetalle).sum());*/
-    if(entity.getProveedor() == null) throw new IllegalArgumentException("El proveedor no puede ser nulo");
 
+    entity.setProveedor(proveedorRepository.findById(idProveedor).orElseThrow(() -> new RuntimeException("Proveedor not found with id:" + idProveedor)));
     entity.setTotalCompra((float) entity.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDetalle).sum());
     entity.setTotalDescCompra((float) entity.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDescDetalle).sum());
-    entity.getListaDetalleCompra().forEach(d -> {
-      if (d.getProducto() != null && d.getProducto().getCodigoProducto() != null) {
-        productoRepository.findByCodigoProducto(d.getProducto().getCodigoProducto()).ifPresent(producto -> {
-          producto.setStock(producto.getStock() + d.getCantidad());
-          d.setProducto(producto);
-        });
+    List<DetalleCompra> listaDetalleCompra = entity.getListaDetalleCompra();
+    entity.setListaDetalleCompra(null);
+
+    Compra compra = compraRepository.save(entity);
+
+    listaDetalleCompra.forEach(detalleCompra -> {
+      if (detalleCompra.getProducto().getCodigoProducto() != null) {
+        productoRepository.findByCodigoProducto(detalleCompra.getProducto().getCodigoProducto())
+          .ifPresentOrElse(producto -> {
+            producto.setStock(producto.getStock() + detalleCompra.getCantidad());
+            Producto productoPersisted = productoRepository.save(producto);
+
+            detalleCompra.setCompra(compra);
+            detalleCompra.setProducto(productoPersisted);
+            detalleCompraRepository.save(detalleCompra);
+          }, () -> {
+            detalleCompra.getProducto().setStock(detalleCompra.getCantidad());
+            Producto productoPersisted = productoRepository.save(detalleCompra.getProducto());
+
+            detalleCompra.setCompra(compra);
+            detalleCompra.setProducto(productoPersisted);
+            detalleCompraRepository.save(detalleCompra);
+          });
       }
     });
-    Compra compra = compraRepository.save(entity);
+
+    /*listaDetalleCompra.forEach(detalleCompra -> {
+      detalleCompra.setCompra(null);
+      detalleCompra.setProducto(null);
+    });
+    compra.setProveedor(null);
+    compra.setListaDetalleCompra(listaDetalleCompra);*/
     return compra;
   }
+
 
   @Override
   public Compra update(Compra entity) {

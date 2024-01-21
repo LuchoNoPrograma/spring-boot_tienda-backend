@@ -19,7 +19,7 @@ public class Compra extends AuditoriaRevision {
   private List<DetalleCompra> listaDetalleCompra;
 
   //por defecto el fetch es EAGER en @ManyToOne
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "fk_id_proveedor", foreignKey = @ForeignKey(name = "compra_suministrado_por_proveedor"), nullable = false)
   private Proveedor proveedor;
 

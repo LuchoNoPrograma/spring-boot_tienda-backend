@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class DetalleCompra extends AuditoriaRevision {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "fk_codigo_producto", foreignKey = @ForeignKey(name = "detalle_compra_tiene_producto"))
-  private Producto producto ;
+  private Producto producto;
 
 
   @ManyToOne(fetch = FetchType.LAZY)
