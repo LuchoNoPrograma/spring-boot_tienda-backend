@@ -4,6 +4,7 @@ import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.repository.ProductoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IProductoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +25,18 @@ public class ProductoServiceImpl implements IProductoService {
   }
 
   @Override
+  public List<Producto> findAll(Pageable pageable) {
+    return productoRepository.findAll(pageable).getContent();
+  }
+
+  @Override
   public Producto createNew(Producto entity) {
     return productoRepository.save(entity);
   }
 
   @Override
   public Producto update(Producto entity) {
-    return null;
+    return productoRepository.save(entity);
   }
 
   @Override
