@@ -37,11 +37,18 @@ public class CompraApi {
   private final IProveedorService proveedorService;
   private final DetalleCompraRepository detalleCompraRepository;
 
-  @Operation(summary = "Find Compra with given ID", description = "Given an idCompra, it will return Compra from DB")
+  @Operation(summary = "Find Compra with given ID", description = "Given an idCompra, it will return Compra from DB",
+    responses = {
+      @ApiResponse(responseCode = "200", description = "Compra found successfully",
+        content = {@Content(schema = @Schema(implementation = CompraDto.class))}),
+      @ApiResponse(responseCode = "404", description = "Compra not found", content = @Content),
+    })
   @GetMapping("/{idCompra}")
   public ResponseEntity<CompraDto> findById(@PathVariable Integer idCompra) {
     Compra compra = compraService.findById(idCompra);
-    if (compra == null) return ResponseEntity.notFound().build();
+    if (compra == null) {
+      return ResponseEntity.notFound().build();
+    }
     return ResponseEntity.ok().body(this.toDto(compra));
   }
 
@@ -112,7 +119,8 @@ public class CompraApi {
   private CompraDto toDto(Compra entity) {
     CompraDto compraDto = modelMapper.map(entity, CompraDto.class);
     if (entity.getProveedor() != null)
-      compraDto.setProveedor(modelMapper.map(entity.getProveedor(), ProveedorDto.class));
+      entity.getProveedor().setListaCompra(null);
+    compraDto.setProveedor(modelMapper.map(entity.getProveedor(), ProveedorDto.class));
     if (entity.getListaDetalleCompra() != null) {
       List<DetalleCompraDto> listaDetalleCompraDto = entity.getListaDetalleCompra().stream().map(detalleCompra ->
         modelMapper.map(detalleCompra, DetalleCompraDto.class)).toList();

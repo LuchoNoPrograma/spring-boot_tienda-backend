@@ -96,6 +96,6 @@ public class CompraServiceImpl implements ICompraService {
 
   @Override
   public Compra findById(Integer id) {
-    return null;
+    return compraRepository.findById(id).orElse(null);
   }
 }
