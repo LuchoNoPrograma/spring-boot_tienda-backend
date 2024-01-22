@@ -1,15 +1,14 @@
 package com.tiendadbii.tiendadbii.model.service.impl;
 
 import com.tiendadbii.tiendadbii.model.entity.DetalleVenta;
-import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.entity.Venta;
 import com.tiendadbii.tiendadbii.model.repository.ClienteRepository;
 import com.tiendadbii.tiendadbii.model.repository.DetalleVentaRepository;
 import com.tiendadbii.tiendadbii.model.repository.ProductoRepository;
 import com.tiendadbii.tiendadbii.model.repository.VentaRepository;
-import com.tiendadbii.tiendadbii.model.service.interfaces.IProductoService;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IVentaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,13 +25,13 @@ public class VentaServiceImpl implements IVentaService {
 
   @Override
   public List<Venta> findAll() {
-    return null;
+    return ventaRepository.findAll(Sort.by("fechaVenta").descending());
   }
 
   @Override
   @Transactional
   public Venta createNew(Venta entity) {
-    if(entity.getCliente().getIdCliente() != null){
+    if (entity.getCliente().getIdCliente() != null) {
       clienteRepository.findById(entity.getCliente().getIdCliente()).ifPresent(entity::setCliente);
     }
 
@@ -40,7 +39,7 @@ public class VentaServiceImpl implements IVentaService {
     float totalDescVenta = 0;
     List<DetalleVenta> listaDetalleVenta = new ArrayList<>();
 
-    for(DetalleVenta detalleVenta : entity.getListaDetalleVenta()){
+    for (DetalleVenta detalleVenta : entity.getListaDetalleVenta()) {
       //Pretty interesting, if producto has an id existent in the DB, all fields of the entity will be null except by the id,
       //so, this is the reason why we are finding it in the DB to get all field values, Hibernate state managed
       productoRepository.findById(detalleVenta.getProducto().getCodigoProducto()).ifPresent(producto -> {
@@ -85,6 +84,6 @@ public class VentaServiceImpl implements IVentaService {
 
   @Override
   public Venta findById(Integer id) {
-    return null;
+    return ventaRepository.findById(id).orElse(null);
   }
 }
