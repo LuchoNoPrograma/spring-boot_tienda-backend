@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,6 +17,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "venta")
 public class Venta extends AuditoriaRevision {
+  @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+  private List<DetalleVenta> listaDetalleVenta;
+
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "fk_id_empleado", foreignKey = @ForeignKey(name = "venta_realizado_por_empleado"))
   private Empleado empleado;

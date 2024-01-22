@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "detalle_venta")
 public class DetalleVenta extends AuditoriaRevision {
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "fk_nro_venta", foreignKey = @ForeignKey(name = "detalle_venta_pertenece_a_venta"))
   private Venta venta;
 

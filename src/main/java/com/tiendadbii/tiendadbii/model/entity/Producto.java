@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.List;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,9 +16,11 @@ import java.util.List;
 @Builder
 public class Producto extends AuditoriaRevision {
   @OneToMany(mappedBy = "producto", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH})
+  @ToString.Exclude
   private List<DetalleCompra> listaDetalleCompra;
 
   @OneToMany(mappedBy = "producto", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.DETACH})
+  @ToString.Exclude
   private List<DetalleVenta> listaDetalleVenta;
 
   @Id
