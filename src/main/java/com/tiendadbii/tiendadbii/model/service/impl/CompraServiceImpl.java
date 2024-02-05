@@ -42,9 +42,6 @@ public class CompraServiceImpl implements ICompraService {
   @Transactional
   @Override
   public Compra createNew(Compra entity, Integer idProveedor) {
-    /*compra.setTotalCompra((float) compra.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDetalle).sum());
-    compra.setTotalDescCompra((float) compra.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDescDetalle).sum());*/
-
     entity.setProveedor(proveedorRepository.findById(idProveedor).orElseThrow(() -> new RuntimeException("Proveedor not found with id:" + idProveedor)));
     entity.setTotalCompra((float) entity.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDetalle).sum());
     entity.setTotalDescCompra((float) entity.getListaDetalleCompra().stream().mapToDouble(DetalleCompra::getSubtotalDescDetalle).sum());
@@ -71,16 +68,20 @@ public class CompraServiceImpl implements ICompraService {
             detalleCompra.setProducto(productoPersisted);
             detalleCompraRepository.save(detalleCompra);
           });
+      }else{
+        detalleCompra.setCompra(compra);
+        detalleCompra.getProducto().setStock(detalleCompra.getCantidad());
+        detalleCompraRepository.save(detalleCompra);
       }
     });
 
-    /*listaDetalleCompra.forEach(detalleCompra -> {
-      detalleCompra.setCompra(null);
-      detalleCompra.setProducto(null);
-    });
-    compra.setProveedor(null);
-    compra.setListaDetalleCompra(listaDetalleCompra);*/
+    compra.setListaDetalleCompra(listaDetalleCompra);
     return compra;
+  }
+
+  @Override
+  public List<Compra> findAllByProveedorIdProveedor(Integer idProveedor) {
+    return compraRepository.findAllByProveedorIdProveedor(idProveedor);
   }
 
 
@@ -91,7 +92,7 @@ public class CompraServiceImpl implements ICompraService {
 
   @Override
   public void deleteById(Integer id) {
-
+    compraRepository.deleteById(id);
   }
 
   @Override

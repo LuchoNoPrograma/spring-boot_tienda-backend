@@ -12,4 +12,6 @@ public interface ICompraService extends GenericCrudService<Compra, Integer> {
 
   @Transactional
   Compra createNew(Compra entity, Integer idProveedor);
+
+  List<Compra> findAllByProveedorIdProveedor(Integer idProveedor);
 }
