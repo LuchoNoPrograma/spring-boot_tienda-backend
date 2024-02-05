@@ -1,9 +1,9 @@
 package com.tiendadbii.tiendadbii.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.tiendadbii.tiendadbii.util.views.CompraViews;
-import com.tiendadbii.tiendadbii.util.views.ProveedorViews;
-import com.tiendadbii.tiendadbii.util.views.Views;
+import com.tiendadbii.tiendadbii.views.CompraViews;
+import com.tiendadbii.tiendadbii.views.ProveedorViews;
+import com.tiendadbii.tiendadbii.views.Views;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

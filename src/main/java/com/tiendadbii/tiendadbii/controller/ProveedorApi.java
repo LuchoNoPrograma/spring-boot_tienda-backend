@@ -6,7 +6,7 @@ import com.tiendadbii.tiendadbii.dto.ProveedorDto;
 import com.tiendadbii.tiendadbii.model.entity.Compra;
 import com.tiendadbii.tiendadbii.model.entity.Proveedor;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IProveedorService;
-import com.tiendadbii.tiendadbii.util.views.ProveedorViews;
+import com.tiendadbii.tiendadbii.views.ProveedorViews;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

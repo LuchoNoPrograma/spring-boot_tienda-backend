@@ -1,7 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.tiendadbii.tiendadbii.util.views.PersonaViews;
+import com.tiendadbii.tiendadbii.views.PersonaViews;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
