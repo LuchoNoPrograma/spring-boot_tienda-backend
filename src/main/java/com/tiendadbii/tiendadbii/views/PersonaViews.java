@@ -1,4 +1,4 @@
-package com.tiendadbii.tiendadbii.util.views;
+package com.tiendadbii.tiendadbii.views;
 
 public class PersonaViews {
   public interface Actualizar {

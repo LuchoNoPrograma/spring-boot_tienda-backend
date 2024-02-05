@@ -12,7 +12,7 @@ import com.tiendadbii.tiendadbii.model.repository.DetalleCompraRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICompraService;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IProveedorService;
 import com.tiendadbii.tiendadbii.util.swagger_example.CompraExample;
-import com.tiendadbii.tiendadbii.util.views.CompraViews;
+import com.tiendadbii.tiendadbii.views.CompraViews;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
