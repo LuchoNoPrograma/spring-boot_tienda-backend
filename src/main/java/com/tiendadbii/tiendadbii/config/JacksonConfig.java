@@ -16,7 +16,7 @@ public class JacksonConfig {
     objectMapper.registerModule(new JavaTimeModule());
 
     Hibernate6Module hibernate6Module = new Hibernate6Module();
-    hibernate6Module.enable(Hibernate6Module.Feature.USE_TRANSIENT_ANNOTATION);
+    hibernate6Module.disable(Hibernate6Module.Feature.USE_TRANSIENT_ANNOTATION);
     hibernate6Module.enable(Hibernate6Module.Feature.FORCE_LAZY_LOADING);
     //Configuración para poder ignorar campos con fetch=FetchType.LAZY
     objectMapper.registerModule(new Hibernate6Module());
