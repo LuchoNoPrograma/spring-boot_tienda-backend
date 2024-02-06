@@ -1,5 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.tiendadbii.tiendadbii.views.VentaViews;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
@@ -13,6 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteDto extends PersonaDto implements Serializable {
+  @JsonView({VentaViews.ConListaDetalleVenta.class})
   private Integer idCliente;
 
   @Email(message = "email must be valid")

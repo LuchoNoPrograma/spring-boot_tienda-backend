@@ -1,5 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.tiendadbii.tiendadbii.views.VentaViews;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VentaDto implements Serializable {
+  @JsonView({VentaViews.ConListaDetalleVenta.class})
   @NotNull(message = "listaDetalleVenta cannot be null")
   @Valid
   private List<DetalleVentaDto> listaDetalleVenta;
@@ -28,7 +31,7 @@ public class VentaDto implements Serializable {
   private ClienteDto cliente;
 
   private Integer nroVenta;
-
+  
   @NotNull(message = "fechaVenta cannot be null")
   private LocalDateTime fechaVenta;
 

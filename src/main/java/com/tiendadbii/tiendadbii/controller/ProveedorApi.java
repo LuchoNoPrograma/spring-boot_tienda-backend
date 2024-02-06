@@ -75,7 +75,7 @@ public class ProveedorApi {
     return ResponseEntity.ok().body(this.toDto(proveedor));
   }
 
-  @Operation(summary = "Crear nuevo Proveedor", description = "Para crear proveedor debe proporcionar todos los campos presentes en el ejemplo",
+  @Operation(summary = "Crear nuevo Proveedor", description = "Para crear proveedor debe proporcionar todos los campos presentes en el ejemplo.",
     responses = {
       @ApiResponse(responseCode = "201", description = "Proveedor creado exitosamente"),
       @ApiResponse(responseCode = "404", description = "Proveedor no encontrado con el id: {idProveedor}", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
