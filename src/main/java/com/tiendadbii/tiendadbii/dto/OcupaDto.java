@@ -1,6 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
-import com.tiendadbii.tiendadbii.model.entity.Cargo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.tiendadbii.tiendadbii.views.EmpleadoViews;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,10 +16,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OcupaDto implements Serializable {
-  String nombreCargo;
+  @JsonView({EmpleadoViews.Ver.class})
+  private Integer codigoOcupa;
 
-  Integer idCargo;
-  Cargo cargo;
-  LocalDate fechaInicio;
-  LocalDate fechaFin;
+  @JsonView({EmpleadoViews.Actualizar.class ,EmpleadoViews.Crear.class, EmpleadoViews.Ver.class})
+  private Integer idCargo;
+
+  @JsonView({EmpleadoViews.Ver.class})
+  private String nombreCargo;
+
+  @JsonView({EmpleadoViews.Actualizar.class, EmpleadoViews.Crear.class, EmpleadoViews.Ver.class})
+  private LocalDate fechaInicio;
+
+  @JsonView({EmpleadoViews.Actualizar.class, EmpleadoViews.Crear.class, EmpleadoViews.Ver.class})
+  private LocalDate fechaFin;
 }

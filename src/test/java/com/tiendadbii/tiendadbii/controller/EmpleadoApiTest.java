@@ -6,6 +6,7 @@ import com.tiendadbii.tiendadbii.config.ContainerEnvironment;
 import com.tiendadbii.tiendadbii.dto.EmpleadoDto;
 import com.tiendadbii.tiendadbii.dto.HorarioDto;
 import com.tiendadbii.tiendadbii.dto.OcupaDto;
+import com.tiendadbii.tiendadbii.enums.DiaEnum;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IEmpleadoService;
@@ -67,11 +68,11 @@ public class EmpleadoApiTest extends ContainerEnvironment {
       .celular("1234567")
       .email("correo@example.com")
       .listaHorario(List.of(HorarioDto.builder()
-          .dia("Domingo")
+          .dia(DiaEnum.DOMINGO)
           .horaIngreso(LocalTime.of(6, 0))
           .horaSalida(LocalTime.of(14, 0)).build())
       ).listaOcupa(List.of(OcupaDto.builder()
-          .cargo(Cargo.builder().idCargo(cargoPersisted.getIdCargo()).build())
+          /*.cargo(Cargo.builder().idCargo(cargoPersisted.getIdCargo()).build())*/
           .fechaInicio(LocalDate.now())
           .fechaFin(LocalDate.now().plusMonths(6)).build())
         ).build();

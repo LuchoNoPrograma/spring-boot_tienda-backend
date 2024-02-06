@@ -1,5 +1,6 @@
 package com.tiendadbii.tiendadbii.model.entity;
 
+import com.tiendadbii.tiendadbii.enums.DiaEnum;
 import com.tiendadbii.tiendadbii.model.entity.parent.AuditoriaRevision;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,8 +25,9 @@ public class Horario extends AuditoriaRevision {
   @Column(name = "id_horario")
   private Integer idHorario;
 
-  @Column(name = "dia", length = 155, nullable = false)
-  private String dia;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "dia", nullable = false)
+  private DiaEnum dia;
 
   @Column(name = "hora_ingreso", nullable = false)
   private LocalTime horaIngreso;

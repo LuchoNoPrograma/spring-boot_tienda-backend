@@ -1,5 +1,7 @@
 package com.tiendadbii.tiendadbii.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.tiendadbii.tiendadbii.views.EmpleadoViews;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,9 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmpleadoDto extends PersonaDto {
+  @JsonView({EmpleadoViews.Actualizar.class, EmpleadoViews.Ver.class})
   private Integer idEmpleado;
+
+  @JsonView({EmpleadoViews.Actualizar.class, EmpleadoViews.Crear.class, EmpleadoViews.Ver.class})
   private String email;
+
+  @JsonView({EmpleadoViews.Actualizar.class, EmpleadoViews.Crear.class, EmpleadoViews.Ver.class})
   private List<HorarioDto> listaHorario; //<-- Relationship between Empleado and Horario
+
+  @JsonView({EmpleadoViews.Actualizar.class, EmpleadoViews.Crear.class, EmpleadoViews.Ver.class})
   private List<OcupaDto> listaOcupa; //<-- Relationship n:n between Empleado and Cargo
 
   @Builder

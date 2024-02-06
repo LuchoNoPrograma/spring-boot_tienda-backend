@@ -2,11 +2,11 @@ package com.tiendadbii.tiendadbii.model.service;
 
 import com.tiendadbii.tiendadbii.TiendaDbiiApplication;
 import com.tiendadbii.tiendadbii.config.ContainerEnvironment;
+import com.tiendadbii.tiendadbii.enums.DiaEnum;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.entity.Empleado;
 import com.tiendadbii.tiendadbii.model.entity.Horario;
 import com.tiendadbii.tiendadbii.model.entity.Ocupa;
-import com.tiendadbii.tiendadbii.model.repository.CargoRepository;
 import com.tiendadbii.tiendadbii.model.repository.EmpleadoRepository;
 import com.tiendadbii.tiendadbii.model.repository.HorarioRepository;
 import com.tiendadbii.tiendadbii.model.repository.OcupaRepository;
@@ -14,7 +14,6 @@ import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IEmpleadoService;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +84,8 @@ public class EmpleadoServiceImplTest extends ContainerEnvironment {
       Ocupa.builder().cargo(cargoCajero).fechaInicio(LocalDate.now()).fechaFin(LocalDate.now()).build()
     );
     List<Horario> listaHorario = List.of(
-      Horario.builder().dia("Sábado").horaIngreso(LocalTime.of(7, 0)).horaSalida(LocalTime.of(16, 0)).build(),
-      Horario.builder().dia("Domingo").horaIngreso(LocalTime.of(7, 0)).horaSalida(LocalTime.of(16, 0)).build()
+      Horario.builder().dia(DiaEnum.SABADO).horaIngreso(LocalTime.of(7, 0)).horaSalida(LocalTime.of(16, 0)).build(),
+      Horario.builder().dia(DiaEnum.DOMINGO).horaIngreso(LocalTime.of(7, 0)).horaSalida(LocalTime.of(16, 0)).build()
     );
 
 
@@ -148,11 +147,11 @@ public class EmpleadoServiceImplTest extends ContainerEnvironment {
 
     List<Ocupa> listaOcupa = List.of(new Ocupa(cargoPersisted, null, null, LocalDate.now(), LocalDate.now().plusYears(1)));
     List<Horario> listaHorario = List.of(
-      new Horario(null, null, "Lunes", LocalTime.of(7, 0), LocalTime.of(14, 0)),
-      new Horario(null, null, "Martes", LocalTime.of(7, 0), LocalTime.of(14, 0)),
-      new Horario(null, null, "Miercoles", LocalTime.of(7, 0), LocalTime.of(14, 0)),
-      new Horario(null, null, "Jueves", LocalTime.of(7, 0), LocalTime.of(14, 0)),
-      new Horario(null, null, "Viernes", LocalTime.of(7, 0), LocalTime.of(14, 0))
+      new Horario(null, null, DiaEnum.LUNES, LocalTime.of(7, 0), LocalTime.of(14, 0)),
+      new Horario(null, null, DiaEnum.MARTES, LocalTime.of(7, 0), LocalTime.of(14, 0)),
+      new Horario(null, null, DiaEnum.MIERCOLES, LocalTime.of(7, 0), LocalTime.of(14, 0)),
+      new Horario(null, null, DiaEnum.JUEVES, LocalTime.of(7, 0), LocalTime.of(14, 0)),
+      new Horario(null, null, DiaEnum.VIERNES, LocalTime.of(7, 0), LocalTime.of(14, 0))
     );
 
     Empleado empleado = Empleado.builder()
