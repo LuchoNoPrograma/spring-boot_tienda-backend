@@ -2,7 +2,9 @@ package com.tiendadbii.tiendadbii.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.tiendadbii.tiendadbii.views.CompraViews;
+import com.tiendadbii.tiendadbii.views.ProductoViews;
 import com.tiendadbii.tiendadbii.views.ProveedorViews;
+import com.tiendadbii.tiendadbii.views.Views;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,29 +19,36 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductoDto implements Serializable {
+  @JsonView(Views.Private.class)
   private LocalDateTime fechaRegistro;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, ProductoViews.Actualizar.class,
+    CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private Integer codigoProducto;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private String codigoBarra;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, ProductoViews.Actualizar.class,
+    CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private String nombreProducto;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, ProductoViews.Actualizar.class,
+    CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private String descripcion;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, ProductoViews.Actualizar.class,
+    CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private Float precioProducto;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, ProductoViews.Actualizar.class,
+    CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private Float precioVenta;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private Integer stock;
 
-  @JsonView({CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
+  @JsonView({ProductoViews.Ver.class, ProductoViews.Actualizar.class,
+    CompraViews.ConProveedorId.class, ProveedorViews.ConListaCompra.class})
   private String rutaArchivo;
 }

@@ -1,20 +1,23 @@
 package com.tiendadbii.tiendadbii.controller;
 
-import com.tiendadbii.tiendadbii.dto.CompraDto;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.tiendadbii.tiendadbii.dto.ProductoDto;
 import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IProductoService;
+import com.tiendadbii.tiendadbii.util.swagger_example.ProductoExample;
+import com.tiendadbii.tiendadbii.views.ProductoViews;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,28 +27,29 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/producto")
-@Tag(name = "Producto", description = "API Simple operations")
+@Tag(name = "4. Producto", description = "Con este EndPoint se puede realizar todas las operaciones relacionadas a los productos.")
 public class ProductoApi {
   private final IProductoService productoService;
   private final ModelMapper modelMapper;
 
-  @Operation(summary = "Find Producto with given codigoProducto", description = "Given an codigoProducto, it will return Producto from DB",
+  @Operation(summary = "Buscar un Producto dado {codigoProducto}", description = "Retorna un producto con todos sus campos.",
     responses = {
-      @ApiResponse(responseCode = "200", description = "Producto found successfully",
-        content = {@Content(schema = @Schema(implementation = CompraDto.class))}),
-      @ApiResponse(responseCode = "404", description = "Producto not found", content = @Content),
+      @ApiResponse(responseCode = "200", description = "Producto encontrado exitosamente"),
+      @ApiResponse(responseCode = "404", description = "Producto no encontrada con el codigoProducto: {codigoProducto}", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
     })
+  @JsonView({ProductoViews.Ver.class})
   @GetMapping("/{codigoProducto}")
   public ResponseEntity<ProductoDto> findById(@PathVariable Integer codigoProducto) {
     Producto producto = productoService.findById(codigoProducto);
     if (producto == null) {
-      return ResponseEntity.notFound().build();
+      throw new EntityNotFoundException("Producto no encontrada con el codigoProducto: " + codigoProducto);
     }
     return ResponseEntity.ok().body(this.toDto(producto));
   }
 
-  @Operation(summary = "List all registered Producto with Pageable", description = "The serach is performed in DB using 4 parameters")
+  @Operation(summary = "Lista de todos los productos en formato de página", description = "La búsqueda se procesa basandose en 4 parámetros.")
   @GetMapping("/pageable")
+  @JsonView({ProductoViews.Ver.class})
   public ResponseEntity<List<ProductoDto>> findAll(
     @RequestParam(required = false, defaultValue = "0") int page,
     @RequestParam(required = false, defaultValue = "10") int size,
@@ -58,17 +62,27 @@ public class ProductoApi {
     return ResponseEntity.ok().body(productoService.findAll(pageable).stream().map(this::toDto).toList());
   }
 
-  @Operation(summary = "Update Producto", description = "Update an existing Producto in DB, all fields should be filled",
+  @Operation(summary = "Actualizar Producto", description = "Actualiza todos los campos de un producto existente",
+    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      description= "Se podran actualizar todos los campos del Producto, a excepcion del campo \"stock\" y \"codigoBarra\"",
+      content = @Content(examples = {
+        @ExampleObject(
+          summary = "Actualización simple de producto",
+          value = ProductoExample.PRODUCTO_ACTUALIZAR_SIMPLE
+        )
+      })
+    ),
     responses = {
-      @ApiResponse(responseCode = "200", description = "Producto updated successfully",
-        content = {@Content(schema = @Schema(implementation = ProductoDto.class))}),
-      @ApiResponse(responseCode = "400", description = "Bad request, fields should be filled", content = @Content),
+      @ApiResponse(responseCode = "200", description = "Producto actualizado exitosamente",
+        content = @Content(examples = {
+          @ExampleObject(name = "Retorna todos los campos, incluyendo stock y codigoBarra", value = ProductoExample.PRODUCTO_VER, summary = "Producto actualizado")
+        })),
+      @ApiResponse(responseCode = "400", description = "Error en la Request. Debe asegurarse de completar todos los campos."),
+      @ApiResponse(responseCode = "404", description = "Producto no encontrado con el codigoProducto: {codigoProducto}", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
     })
   @PutMapping
-  public ResponseEntity<?> updateProducto(@RequestBody ProductoDto dto) {
-    if (dto.getCodigoBarra() == null || dto.getCodigoBarra().isEmpty()) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Producto should have codigoBarra");
-    }
+  @JsonView({ProductoViews.Ver.class})
+  public ResponseEntity<?> updateProducto(@RequestBody @JsonView({ProductoViews.Actualizar.class}) ProductoDto dto) {
     return ResponseEntity.ok().body(this.toDto(productoService.update(this.toEntity(dto))));
   }
 

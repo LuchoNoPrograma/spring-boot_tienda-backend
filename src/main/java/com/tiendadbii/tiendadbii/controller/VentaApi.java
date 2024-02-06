@@ -47,8 +47,7 @@ public class VentaApi {
 
   @Operation(summary = "Buscar una Venta dado {nroVenta}", description = "Retornar una venta desde la base de datos",
     responses = {
-      @ApiResponse(responseCode = "200", description = "Venta encontrado exitosamente",
-        content = {/*@Content(schema = @Schema(implementation = CompraDto.class))*/}),
+      @ApiResponse(responseCode = "200", description = "Venta encontrado exitosamente"),
       @ApiResponse(responseCode = "404", description = "Venta no encontrada con el nroVenta : {nroVenta}", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
       @ApiResponse(responseCode = "500", description = "Error de servidor", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE))
     })

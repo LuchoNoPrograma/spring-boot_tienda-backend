@@ -3,6 +3,7 @@ package com.tiendadbii.tiendadbii.model.service.impl;
 import com.tiendadbii.tiendadbii.model.entity.Producto;
 import com.tiendadbii.tiendadbii.model.repository.ProductoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IProductoService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductoServiceImpl implements IProductoService {
   private final ProductoRepository productoRepository;
+
   @Override
   public List<Producto> findAll() {
     return productoRepository.findAll(Sort.by("nombreProducto").ascending());
@@ -36,6 +38,13 @@ public class ProductoServiceImpl implements IProductoService {
 
   @Override
   public Producto update(Producto entity) {
+    Producto original = productoRepository.findById(entity.getCodigoProducto()).orElse(null);
+    if (original == null) {
+      throw new EntityNotFoundException("Producto no encontrada con el codigoProducto: " + entity.getCodigoProducto());
+    }
+
+    entity.setStock(original.getStock());
+    entity.setCodigoBarra(original.getCodigoBarra());
     return productoRepository.save(entity);
   }
 
