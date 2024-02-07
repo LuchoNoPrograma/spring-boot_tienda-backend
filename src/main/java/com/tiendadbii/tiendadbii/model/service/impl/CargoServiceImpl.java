@@ -3,7 +3,6 @@ package com.tiendadbii.tiendadbii.model.service.impl;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.repository.CargoRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.ICargoService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package com.tiendadbii.tiendadbii.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.tiendadbii.tiendadbii.dto.EmpleadoDto;
+import com.tiendadbii.tiendadbii.dto.ErrorDto;
 import com.tiendadbii.tiendadbii.dto.HorarioDto;
 import com.tiendadbii.tiendadbii.dto.OcupaDto;
 import com.tiendadbii.tiendadbii.model.entity.Cargo;
@@ -15,6 +16,7 @@ import com.tiendadbii.tiendadbii.views.EmpleadoViews;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
@@ -95,7 +97,7 @@ public class EmpleadoApi {
     ),
     responses = {
       @ApiResponse(responseCode = "201", description = "Empleado creado exitosamente"),
-      @ApiResponse(responseCode = "400", description = "Error en la Request, asegurese de completar todos los campos"),
+      @ApiResponse(responseCode = "400", description = "Error en la Request, asegurese de completar todos los campos de manera correcta", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
       @ApiResponse(responseCode = "404", description = "Cargo no encontrado con el idCargo: {idCargo}", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
     }
   )

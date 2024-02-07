@@ -104,19 +104,20 @@ public class VentaApi {
       })
     ),
     responses = {
-      @ApiResponse(responseCode = "201", description = "Venta created succesfully, returned Venta",
+      @ApiResponse(responseCode = "201", description = "Venta creada exitosamente, el objeto creado es retornado",
         content = {@Content(schema = @Schema(implementation = VentaDto.class))}),
-      @ApiResponse(responseCode = "400", description = "Bad request, invalid field"),
-      @ApiResponse(responseCode = "404", description = "Not found, resource not found")
+      @ApiResponse(responseCode = "400", description = "Error en la Request, asegurese de completar todos los campos"),
+      @ApiResponse(responseCode = "404", description = "Empleado no encontrado con el idEmpleado: {idEmpleado}\n " +
+        "Producto no encontrado con el codigoProducto: {codigoProducto}", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
     })
   @PostMapping("/empleado/{idEmpleado}")
   public ResponseEntity<?> createVenta(@RequestBody @Valid VentaDto dto, @PathVariable Integer idEmpleado) {
     Empleado empleado = empleadoService.findById(idEmpleado);
     if (empleado == null)
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empleado with idEmpleado: " + idEmpleado + " not found");
+      throw new EntityNotFoundException("Empleado no encontrado con el idEmpleado: " + idEmpleado);
     for (DetalleVentaDto venta : dto.getListaDetalleVenta()) {
       if (venta.getCodigoProducto() == null)
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Each DetalleVenta must have a codigoProducto");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cada item del campo \"listaDetalleVenta\" debe tener un valor para el campo \"codigoProducto\"");
     }
 
 
@@ -128,7 +129,7 @@ public class VentaApi {
 
       Producto producto = productoService.findById(detalleVentaDto.getCodigoProducto());
       if (producto == null)
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto with codigoProducto: " + detalleVentaDto.getCodigoProducto() + " not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado con el codigoProducto: " + detalleVentaDto.getCodigoProducto() + " not found");
 
       detalleVenta.setProducto(producto);
     }
