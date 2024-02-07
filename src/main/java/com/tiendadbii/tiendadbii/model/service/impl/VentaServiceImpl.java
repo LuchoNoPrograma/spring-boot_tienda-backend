@@ -1,5 +1,6 @@
 package com.tiendadbii.tiendadbii.model.service.impl;
 
+import com.tiendadbii.tiendadbii.dto.VentaResumenDto;
 import com.tiendadbii.tiendadbii.model.entity.DetalleVenta;
 import com.tiendadbii.tiendadbii.model.entity.Venta;
 import com.tiendadbii.tiendadbii.model.repository.ClienteRepository;
@@ -7,11 +8,15 @@ import com.tiendadbii.tiendadbii.model.repository.DetalleVentaRepository;
 import com.tiendadbii.tiendadbii.model.repository.ProductoRepository;
 import com.tiendadbii.tiendadbii.model.repository.VentaRepository;
 import com.tiendadbii.tiendadbii.model.service.interfaces.IVentaService;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,5 +90,22 @@ public class VentaServiceImpl implements IVentaService {
   @Override
   public Venta findById(Integer id) {
     return ventaRepository.findById(id).orElse(null);
+  }
+
+  @Override
+  public List<Venta> findByFechaVentaBetween(LocalDate start, LocalDate end) {
+    return ventaRepository.findByFechaVentaBetween(start.atTime(0, 0), end.atTime(23, 59));
+  }
+
+  @Override
+  public List<VentaResumenDto> getVentaResumenBetween(LocalDate fechaInicio, LocalDate fechaFin) {
+    List<Tuple> listaTupla = ventaRepository.getVentaResumenBetween(fechaInicio, fechaFin);
+    return listaTupla.stream().map(tuple -> VentaResumenDto.builder()
+      .fecha(tuple.get("fecha", Date.class).toLocalDate())
+      .ventaTotalBruto(tuple.get("venta_total_bruto", Float.class))
+      .descuentoTotal(tuple.get("descuento_total", Float.class))
+      .ventaTotalNeto(tuple.get("venta_total_neto", Float.class))
+      .build()
+    ).toList();
   }
 }

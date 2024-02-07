@@ -3,6 +3,7 @@ package com.tiendadbii.tiendadbii.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.tiendadbii.tiendadbii.dto.DetalleVentaDto;
 import com.tiendadbii.tiendadbii.dto.VentaDto;
+import com.tiendadbii.tiendadbii.dto.VentaResumenDto;
 import com.tiendadbii.tiendadbii.model.entity.DetalleVenta;
 import com.tiendadbii.tiendadbii.model.entity.Empleado;
 import com.tiendadbii.tiendadbii.model.entity.Producto;
@@ -13,6 +14,7 @@ import com.tiendadbii.tiendadbii.model.service.interfaces.IVentaService;
 import com.tiendadbii.tiendadbii.util.swagger_example.VentaExample;
 import com.tiendadbii.tiendadbii.views.VentaViews;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,6 +32,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin
@@ -80,14 +84,48 @@ public class VentaApi {
     return ResponseEntity.ok().body(ventaService.findAll().stream().map(this::toDto).toList());
   }
 
+  @Operation(summary = "Lista las ventas entre dos fechas", description = "Retorna las ventas realizadas entre 2 fechas",
+    responses = {@ApiResponse(responseCode = "200", description = "Lista de ventas retornada exitosamente")}
+  )
+  @JsonView({VentaViews.SinListaDetalleVenta.class})
+  @GetMapping("/entre-fechas")
+  public ResponseEntity<List<VentaDto>> findByFechaVentaBetween(
+    @Parameter(description = "Fecha de inicio a filtrar en formato yyyy-MM-dd", example = "2024-02-01") @RequestParam LocalDate start,
+    @Parameter(description = "Fecha de fin a filtrar en formato yyyy-MM-dd", example = "2024-02-28") @RequestParam LocalDate end
+  ) {
+    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT).setAmbiguityIgnored(true);
+
+    return ResponseEntity.ok().body(ventaService.findByFechaVentaBetween(start, end).stream().map(this::toDto).toList());
+  }
+
+  @Operation(summary = "Resumen de ventas entre fechas", description = """
+    Retorna una lista de items que tiene 4 campos:
+      1) <b>fecha:</b> fecha de la venta.
+      2) <b>ventaTotalBruto:</b> venta sin descuentos.
+      3) <b>descuentoTotal:</b>: descuentos aplicados esa fecha.
+      4) <b>ventaTotalNeto:</b> venta con descuentos aplicados.
+    """,
+    responses = {@ApiResponse(responseCode = "200", description = "Resumen de ventas retornada exitosamente")}
+  )
+  @GetMapping("/resumen/entre-fechas")
+  public ResponseEntity<List<VentaResumenDto>> getVentaResumenBetween(
+    @Parameter(description = "Fecha de inicio a filtrar en formato yyyy-MM-dd", example = "2024-02-01") @RequestParam LocalDate start,
+    @Parameter(description = "Fecha de fin a filtrar en formato yyyy-MM-dd", example = "2024-02-28") @RequestParam LocalDate end
+  ) {
+    return ResponseEntity.ok().body(ventaService.getVentaResumenBetween(start, end));
+  }
+
   @Operation(
     summary = "Registrar venta (Crear nueva venta)",
     description = """
       Para realizar el registro de una venta debe proporcionar todos los campos establecidos en el ejemplo.
-      
-      El campo "listaDetalleVenta" establece todos los datos de los producto a vender, se tiene que considerar lo siguiente:\n
-       1) El campo "cantidad" reducira el stock del producto asociado.\n
-       2) El campo "subtotalDetalle" del Response es calculado basandose en el "precioVenta" del producto multiplicado por la cantidad.\n
+            
+      El campo "listaDetalleVenta" establece todos los datos de los producto a vender, se tiene que considerar lo siguiente:
+            
+       1) El campo "cantidad" reducira el stock del producto asociado.
+            
+       2) El campo "subtotalDetalle" del Response es calculado basandose en el "precioVenta" del producto multiplicado por la cantidad.
+            
        3) El campo "totalVenta" del response es calculado basandose en la sumatoria de "subtotalDetalle" del Response. 
       """,
     requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
