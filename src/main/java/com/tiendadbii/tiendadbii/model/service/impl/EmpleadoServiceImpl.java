@@ -1,5 +1,6 @@
 package com.tiendadbii.tiendadbii.model.service.impl;
 
+import com.tiendadbii.tiendadbii.model.entity.Cargo;
 import com.tiendadbii.tiendadbii.model.entity.Empleado;
 import com.tiendadbii.tiendadbii.model.entity.Horario;
 import com.tiendadbii.tiendadbii.model.entity.Ocupa;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,23 +39,66 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
   }
 
   @Override
-  public Empleado update(Empleado entity) {
-    horarioRepository.deleteAll(horarioRepository.findAllByEmpleadoIdEmpleado(entity.getIdEmpleado()));
-    ocupaRepository.deleteAll(ocupaRepository.findAllByEmpleadoIdEmpleado(entity.getIdEmpleado()));
+  public Empleado createNew(Empleado entity, List<Cargo> listaCargo) {
+    Empleado empleado = empleadoRepository.save(entity);
+    List<Ocupa> listaOcupa = empleado.getListaOcupa().stream().map(ocupa -> {
+      ocupa.setCargo(listaCargo.stream().filter(cargo -> cargo.getIdCargo().equals(ocupa.getCargo().getIdCargo())).findFirst().get());
+      return ocupa;
+    }).toList();
+
+    empleado.setListaOcupa(listaOcupa);
+    return empleado;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public Empleado update(Empleado entity, List<Cargo> listaCargo) {
+    boolean shouldUpdateListaHorario = entity.getListaHorario() != null && !entity.getListaHorario().isEmpty();
+    boolean shouldUpdateListaOcupa = entity.getListaOcupa() != null && !entity.getListaOcupa().isEmpty();
+    if(shouldUpdateListaHorario) {
+      horarioRepository.deleteAll(horarioRepository.findAllByEmpleadoIdEmpleado(entity.getIdEmpleado()));
+    }
+
+    if(shouldUpdateListaOcupa) {
+      ocupaRepository.deleteAll(ocupaRepository.findAllByEmpleadoIdEmpleado(entity.getIdEmpleado()));
+    }
 
     Empleado newEmpleado = empleadoRepository.save(entity);
     Empleado emptyEmpleado = new Empleado();
     emptyEmpleado.setIdEmpleado(newEmpleado.getIdEmpleado());
 
-    List<Horario> listaHorario = entity.getListaHorario();
-    listaHorario.forEach(horario -> horario.setEmpleado(emptyEmpleado));
 
-    List<Ocupa> listaOcupa = entity.getListaOcupa();
-    listaOcupa.forEach(ocupa -> ocupa.setEmpleado(emptyEmpleado));
+    if(shouldUpdateListaHorario) {
+      List<Horario> listaHorario = entity.getListaHorario();
+      listaHorario.forEach(horario -> horario.setEmpleado(emptyEmpleado));
+      newEmpleado.setListaHorario(horarioRepository.saveAll(listaHorario));
+    }else{
+      newEmpleado.setListaHorario(horarioRepository.findAllByEmpleadoIdEmpleado(newEmpleado.getIdEmpleado()));
+    }
 
-    newEmpleado.setListaHorario(horarioRepository.saveAll(listaHorario));
-    newEmpleado.setListaOcupa(ocupaRepository.saveAll(listaOcupa));
+    if(shouldUpdateListaOcupa) {
+      List<Ocupa> listaOcupa = entity.getListaOcupa();
+      listaOcupa.forEach(ocupa -> ocupa.setEmpleado(emptyEmpleado));
+      List<Ocupa> listaOcupaPersisted = ocupaRepository.saveAll(listaOcupa);
+      /*
+       * Esta linea solo rellena los datos del cargo, ya que al persistirlos no retorna los datos de los cargos
+       * */
+      newEmpleado.setListaOcupa(listaOcupaPersisted.stream().map(ocupa -> {
+          ocupa.setCargo(listaCargo.stream().filter(cargo -> cargo.getIdCargo().equals(ocupa.getCargo().getIdCargo())).findFirst().get());
+          return ocupa;
+        }).toList()
+      );
+    }else{
+      newEmpleado.setListaOcupa(ocupaRepository.findAllByEmpleadoIdEmpleado(newEmpleado.getIdEmpleado()));
+    }
     return newEmpleado;
+  }
+
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public Empleado update(Empleado entity) {
+    return empleadoRepository.save(entity);
   }
 
 
