@@ -17,7 +17,7 @@ RUN mvn clean package -DskipTests
 #
 FROM openjdk:17-jdk-slim
 COPY --from=build /target/TiendaDBII-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 9093
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
 
 # Usar una imagen base con JDK 11 y Maven
